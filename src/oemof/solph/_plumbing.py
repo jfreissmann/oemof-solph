@@ -137,8 +137,6 @@ class ConvertingProperty:
         self.name = "_" + name
 
     def __get__(self, obj, objtype=None):
-        if obj is None:
-            return self
         return getattr(obj, self.name, self.value)
 
     def __set__(self, obj, value):
