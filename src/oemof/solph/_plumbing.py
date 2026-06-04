@@ -114,6 +114,25 @@ def valid_sequence(sequence, length: int) -> bool:
     return False
 
 
+class SequenceProperty:
+    """Descriptor class for properties that should contain sequences
+    """
+    def __init__(self, value):
+        self.value = value
+        self.name = None
+
+    def __set_name__(self, owner, name):
+        self.name = "_" + name
+
+    def __get__(self, obj, objtype=None):
+        if obj is None:
+            return self
+        return getattr(obj, self.name, self.value)
+
+    def __set__(self, obj, value):
+        setattr(obj, self.name, sequence(value))
+
+
 class _FakeSequence:
     """Emulates a list whose length is not known in advance.
 
