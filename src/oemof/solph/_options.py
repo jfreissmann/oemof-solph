@@ -120,16 +120,19 @@ class Investment:
             custom_properties = custom_attributes
         # --- END ---
         self.custom_properties = custom_properties
+        # TODO setters here
         self.maximum = sequence(maximum)
         self.minimum = sequence(minimum)
         self.ep_costs = sequence(ep_costs)
         self.existing = existing
         self.nonconvex = nonconvex
+        # TODO setters here
         self.offset = sequence(offset)
         self.overall_maximum = overall_maximum
         self.overall_minimum = overall_minimum
         self.lifetime = lifetime
         self.age = age
+        # TODO setters here
         self.fixed_costs = sequence(fixed_costs)
 
         self._check_invest_attributes()
@@ -286,11 +289,13 @@ class NonConvex:
         self.custom_properties = custom_properties
 
         self.initial_status = initial_status
+        # TODO setters here
         self.minimum_uptime = sequence(minimum_uptime)
         self.minimum_downtime = sequence(minimum_downtime)
         self.maximum_startups = maximum_startups
         self.maximum_shutdowns = maximum_shutdowns
 
+        # TODO setters here
         self.startup_costs = sequence(startup_costs)
         self.shutdown_costs = sequence(shutdown_costs)
         self.activity_costs = sequence(activity_costs)

@@ -122,6 +122,7 @@ class Converter(Node):
         if conversion_factors is None:
             conversion_factors = {}
 
+        # TODO setters here
         self.conversion_factors = {
             k: sequence(v) for k, v in conversion_factors.items()
         }

@@ -230,12 +230,15 @@ class GenericStorage(Node):
         self.nominal_storage_capacity = None
         self.investment = None
         self._invest_group = False
+        # TODO setters here
         self.invest_relation_input_output = sequence(
             invest_relation_input_output
         )
+        # TODO setters here
         self.invest_relation_input_capacity = sequence(
             invest_relation_input_capacity
         )
+        # TODO setters here
         self.invest_relation_output_capacity = sequence(
             invest_relation_output_capacity
         )
@@ -253,6 +256,7 @@ class GenericStorage(Node):
 
         self.initial_storage_level = initial_storage_level
         self.balanced = balanced
+        # TODO setters here
         self.loss_rate = sequence(loss_rate)
         self.fixed_losses_relative = sequence(fixed_losses_relative)
         self.fixed_losses_absolute = sequence(fixed_losses_absolute)

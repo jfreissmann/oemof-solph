@@ -88,6 +88,7 @@ class ExtractionTurbineCHP(Converter):
             conversion_factors=conversion_factors,
             custom_properties=custom_properties,
         )
+        # TODO setters here
         self.conversion_factor_full_condensation = {
             k: sequence(v)
             for k, v in conversion_factor_full_condensation.items()

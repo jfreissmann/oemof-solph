@@ -139,6 +139,7 @@ class GenericCHP(Node):
         self.fuel_input = fuel_input
         self.electrical_output = electrical_output
         self.heat_output = heat_output
+        # TODO setters here
         self.beta = sequence(beta)
         self.back_pressure = back_pressure
         self._alphas = None

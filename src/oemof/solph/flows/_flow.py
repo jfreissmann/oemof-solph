@@ -258,6 +258,7 @@ class Flow(Edge):
             )
             warn(msg, debugging.SuspiciousUsageWarning)
 
+        # TODO setters here
         self.fixed_costs = sequence(fixed_costs)
         self.variable_costs = sequence(variable_costs)
         self.positive_gradient_limit = sequence(positive_gradient_limit)
@@ -303,6 +304,7 @@ class Flow(Edge):
         else:
             self.bidirectional = False
 
+        # TODO setters here
         self.fix = sequence(fix)
         self.maximum = sequence(maximum)
         self.minimum = sequence(minimum)

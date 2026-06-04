@@ -109,6 +109,8 @@ class Link(Node):
         if conversion_factors is None:
             warn_if_missing_attribute(self, "conversion_factors")
             conversion_factors = {}
+
+        # TODO setters here
         self.conversion_factors = {
             k: sequence(v) for k, v in conversion_factors.items()
         }
