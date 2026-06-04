@@ -25,7 +25,6 @@ from pyomo.environ import Constraint
 
 from oemof.solph._plumbing import ConvertingProperty
 from oemof.solph._plumbing import SequenceDict
-from oemof.solph._plumbing import sequence
 from oemof.solph.components import Converter
 
 

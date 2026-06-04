@@ -115,6 +115,7 @@ def valid_sequence(sequence, length: int) -> bool:
 
 
 class SequenceDict(dict):
+    """Dictionary that converts values to sequences"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key, value in self.items():
@@ -122,6 +123,7 @@ class SequenceDict(dict):
 
     def __setitem__(self, key, value):
         super().__setitem__(key, sequence(value))
+
 
 class ConvertingProperty:
     """Descriptor class for properties that should contain sequences

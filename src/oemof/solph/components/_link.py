@@ -29,7 +29,6 @@ from pyomo.environ import Constraint
 from oemof.solph._helpers import warn_if_missing_attribute
 from oemof.solph._plumbing import ConvertingProperty
 from oemof.solph._plumbing import SequenceDict
-from oemof.solph._plumbing import sequence
 
 
 class Link(Node):
