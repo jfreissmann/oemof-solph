@@ -20,6 +20,7 @@ from warnings import warn
 
 from oemof.tools import debugging
 
+from oemof.solph._plumbing import SequenceProperty
 from oemof.solph._plumbing import sequence
 
 
@@ -120,20 +121,17 @@ class Investment:
             custom_properties = custom_attributes
         # --- END ---
         self.custom_properties = custom_properties
-        # TODO setters here
-        self.maximum = sequence(maximum)
-        self.minimum = sequence(minimum)
-        self.ep_costs = sequence(ep_costs)
+        self.maximum = maximum
+        self.minimum = minimum
+        self.ep_costs = ep_costs
         self.existing = existing
         self.nonconvex = nonconvex
-        # TODO setters here
-        self.offset = sequence(offset)
+        self.offset = offset
         self.overall_maximum = overall_maximum
         self.overall_minimum = overall_minimum
         self.lifetime = lifetime
         self.age = age
-        # TODO setters here
-        self.fixed_costs = sequence(fixed_costs)
+        self.fixed_costs = fixed_costs
 
         self._check_invest_attributes()
         self._check_invest_attributes_maximum()
@@ -141,6 +139,12 @@ class Investment:
         self._check_age_and_lifetime()
         self._check_invest_attributes_nonconvex()
         self._check_nonconvex()
+
+    maximum = SequenceProperty()
+    minimum = SequenceProperty()
+    ep_costs = SequenceProperty()
+    offset = SequenceProperty()
+    fixed_costs = SequenceProperty()
 
     def _check_invest_attributes(self):
         """Throw an error if existing is other than 0 and nonconvex is True"""
@@ -289,21 +293,28 @@ class NonConvex:
         self.custom_properties = custom_properties
 
         self.initial_status = initial_status
-        # TODO setters here
-        self.minimum_uptime = sequence(minimum_uptime)
-        self.minimum_downtime = sequence(minimum_downtime)
+        self.minimum_uptime = minimum_uptime
+        self.minimum_downtime = minimum_downtime
         self.maximum_startups = maximum_startups
         self.maximum_shutdowns = maximum_shutdowns
 
-        # TODO setters here
-        self.startup_costs = sequence(startup_costs)
-        self.shutdown_costs = sequence(shutdown_costs)
-        self.activity_costs = sequence(activity_costs)
-        self.inactivity_costs = sequence(inactivity_costs)
-        self.negative_gradient_limit = sequence(negative_gradient_limit)
-        self.positive_gradient_limit = sequence(positive_gradient_limit)
+        self.startup_costs = startup_costs
+        self.shutdown_costs = shutdown_costs
+        self.activity_costs = activity_costs
+        self.inactivity_costs = inactivity_costs
+        self.negative_gradient_limit = negative_gradient_limit
+        self.positive_gradient_limit = positive_gradient_limit
 
         if initial_status == 0:
             self.first_flexible_timestep = self.minimum_downtime[0]
         else:
             self.first_flexible_timestep = self.minimum_uptime[0]
+
+    minimum_uptime = SequenceProperty()
+    minimum_downtime = SequenceProperty()
+    startup_costs = SequenceProperty()
+    shutdown_costs = SequenceProperty()
+    activity_costs = SequenceProperty()
+    inactivity_costs = SequenceProperty()
+    negative_gradient_limit = SequenceProperty()
+    positive_gradient_limit = SequenceProperty()

@@ -41,7 +41,7 @@ from pyomo.environ import Var
 
 from oemof.solph._helpers import check_node_object_for_missing_attribute
 from oemof.solph._options import Investment
-from oemof.solph._plumbing import sequence
+from oemof.solph._plumbing import SequenceProperty
 from oemof.solph._plumbing import valid_sequence
 from oemof.solph.flows import Flow
 
@@ -230,18 +230,10 @@ class GenericStorage(Node):
         self.nominal_storage_capacity = None
         self.investment = None
         self._invest_group = False
-        # TODO setters here
-        self.invest_relation_input_output = sequence(
-            invest_relation_input_output
-        )
-        # TODO setters here
-        self.invest_relation_input_capacity = sequence(
-            invest_relation_input_capacity
-        )
-        # TODO setters here
-        self.invest_relation_output_capacity = sequence(
-            invest_relation_output_capacity
-        )
+        self.invest_relation_input_output = invest_relation_input_output
+        self.invest_relation_input_capacity = invest_relation_input_capacity
+        self.invest_relation_output_capacity = invest_relation_output_capacity
+
         if nominal_capacity is not None:
             if isinstance(nominal_capacity, numbers.Real):
                 self.nominal_storage_capacity = nominal_capacity
@@ -256,16 +248,15 @@ class GenericStorage(Node):
 
         self.initial_storage_level = initial_storage_level
         self.balanced = balanced
-        # TODO setters here
-        self.loss_rate = sequence(loss_rate)
-        self.fixed_losses_relative = sequence(fixed_losses_relative)
-        self.fixed_losses_absolute = sequence(fixed_losses_absolute)
-        self.inflow_conversion_factor = sequence(inflow_conversion_factor)
-        self.outflow_conversion_factor = sequence(outflow_conversion_factor)
-        self.max_storage_level = sequence(max_storage_level)
-        self.min_storage_level = sequence(min_storage_level)
-        self.fixed_costs = sequence(fixed_costs)
-        self.storage_costs = sequence(storage_costs)
+        self.loss_rate = loss_rate
+        self.fixed_losses_relative = fixed_losses_relative
+        self.fixed_losses_absolute = fixed_losses_absolute
+        self.inflow_conversion_factor = inflow_conversion_factor
+        self.outflow_conversion_factor = outflow_conversion_factor
+        self.max_storage_level = max_storage_level
+        self.min_storage_level = min_storage_level
+        self.fixed_costs = fixed_costs
+        self.storage_costs = storage_costs
         self.lifetime_inflow = lifetime_inflow
         self.lifetime_outflow = lifetime_outflow
         self.constant_soc_until = constant_soc_until
@@ -284,6 +275,19 @@ class GenericStorage(Node):
             flow = next(v for k, v in self.inputs.items())
             self.max_charge_capacity = flow.nominal_capacity
             self.relative_charge_limit = flow.maximum
+
+    invest_relation_input_output = SequenceProperty()
+    invest_relation_input_capacity = SequenceProperty()
+    invest_relation_output_capacity = SequenceProperty()
+    loss_rate = SequenceProperty()
+    fixed_losses_relative = SequenceProperty()
+    fixed_losses_absolute = SequenceProperty()
+    inflow_conversion_factor = SequenceProperty()
+    outflow_conversion_factor = SequenceProperty()
+    max_storage_level = SequenceProperty()
+    min_storage_level = SequenceProperty()
+    fixed_costs = SequenceProperty()
+    storage_costs = SequenceProperty()
 
     def _check_number_of_flows(self):
         """Ensure that there is only one inflow and outflow to the storage"""

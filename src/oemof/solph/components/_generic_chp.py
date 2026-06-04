@@ -27,7 +27,7 @@ from pyomo.environ import NonNegativeReals
 from pyomo.environ import Set
 from pyomo.environ import Var
 
-from oemof.solph._plumbing import sequence
+from oemof.solph._plumbing import SequenceProperty
 
 
 class GenericCHP(Node):
@@ -139,8 +139,7 @@ class GenericCHP(Node):
         self.fuel_input = fuel_input
         self.electrical_output = electrical_output
         self.heat_output = heat_output
-        # TODO setters here
-        self.beta = sequence(beta)
+        self.beta = beta
         self.back_pressure = back_pressure
         self._alphas = None
 
@@ -151,6 +150,8 @@ class GenericCHP(Node):
 
         self.outputs.update(electrical_output)
         self.outputs.update(heat_output)
+
+    beta = SequenceProperty()
 
     def _calculate_alphas(self):
         """

@@ -31,8 +31,8 @@ from oemof.network import Edge
 from oemof.tools import debugging
 
 from oemof.solph._options import Investment
+from oemof.solph._plumbing import SequenceProperty
 from oemof.solph._plumbing import sequence
-
 
 class Flow(Edge):
     r"""Defines a flow between two nodes.
@@ -258,11 +258,10 @@ class Flow(Edge):
             )
             warn(msg, debugging.SuspiciousUsageWarning)
 
-        # TODO setters here
-        self.fixed_costs = sequence(fixed_costs)
-        self.variable_costs = sequence(variable_costs)
-        self.positive_gradient_limit = sequence(positive_gradient_limit)
-        self.negative_gradient_limit = sequence(negative_gradient_limit)
+        self.fixed_costs = fixed_costs
+        self.variable_costs = variable_costs
+        self.positive_gradient_limit = positive_gradient_limit
+        self.negative_gradient_limit = negative_gradient_limit
 
         self.full_load_time_max = full_load_time_max
         self.full_load_time_min = full_load_time_min
@@ -304,10 +303,9 @@ class Flow(Edge):
         else:
             self.bidirectional = False
 
-        # TODO setters here
-        self.fix = sequence(fix)
-        self.maximum = sequence(maximum)
-        self.minimum = sequence(minimum)
+        self.fix = fix
+        self.maximum = maximum
+        self.minimum = minimum
 
         need_nominal_capacity = [
             "fix",
@@ -374,3 +372,12 @@ class Flow(Edge):
                 "Investment into a non-convex flows needs a maximum "
                 + "investment to be set."
             )
+
+    fixed_costs = SequenceProperty()
+    variable_costs = SequenceProperty()
+    positive_gradient_limit = SequenceProperty()
+    negative_gradient_limit = SequenceProperty()
+
+    fix = SequenceProperty()
+    maximum = SequenceProperty()
+    minimum = SequenceProperty()
