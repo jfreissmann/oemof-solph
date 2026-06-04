@@ -21,7 +21,6 @@ from warnings import warn
 from oemof.tools import debugging
 
 from oemof.solph._plumbing import SequenceProperty
-from oemof.solph._plumbing import sequence
 
 
 class Investment:

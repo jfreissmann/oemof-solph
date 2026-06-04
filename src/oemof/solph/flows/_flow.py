@@ -34,6 +34,7 @@ from oemof.solph._options import Investment
 from oemof.solph._plumbing import SequenceProperty
 from oemof.solph._plumbing import sequence
 
+
 class Flow(Edge):
     r"""Defines a flow between two nodes.
 

@@ -60,6 +60,7 @@ def test_fake_sequence():
         seq2 = np.array([2, 2]) * seq
         assert (seq2 == np.array(2 * [84])).all()
 
+
 def test_sequence_property():
     class TestClass:
         x = SequenceProperty()
