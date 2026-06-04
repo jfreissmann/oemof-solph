@@ -117,8 +117,8 @@ def valid_sequence(sequence, length: int) -> bool:
 class SequenceProperty:
     """Descriptor class for properties that should contain sequences
     """
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, default=None):
+        self.value = default
         self.name = None
 
     def __set_name__(self, owner, name):

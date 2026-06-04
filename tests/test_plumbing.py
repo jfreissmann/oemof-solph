@@ -62,16 +62,25 @@ def test_fake_sequence():
 
 def test_sequence_property():
     class TestClass:
-        x = SequenceProperty(None)
+        x = SequenceProperty()
+        y = SequenceProperty("y")
 
         def __init__(self, x):
             self.x = x
+            if x is not None:
+                self.y = x
+
+    i0 = TestClass(None)
+    assert i0.x is None
+    assert i0.y == "y"
 
     i1 = TestClass(1)
     assert i1.x[0] == 1
+    assert i1.y[42] == 1
 
     i2 = TestClass([1, 2])
     assert (i2.x == [1, 2]).all()
+    assert (i2.y == [1, 2]).all()
 
 
 def test_sequence():
