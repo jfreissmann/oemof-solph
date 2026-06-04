@@ -31,7 +31,7 @@ from oemof.network import Edge
 from oemof.tools import debugging
 
 from oemof.solph._options import Investment
-from oemof.solph._plumbing import SequenceProperty
+from oemof.solph._plumbing import ConvertingProperty
 from oemof.solph._plumbing import sequence
 
 
@@ -374,11 +374,11 @@ class Flow(Edge):
                 + "investment to be set."
             )
 
-    fixed_costs = SequenceProperty()
-    variable_costs = SequenceProperty()
-    positive_gradient_limit = SequenceProperty()
-    negative_gradient_limit = SequenceProperty()
+    fixed_costs = ConvertingProperty()
+    variable_costs = ConvertingProperty()
+    positive_gradient_limit = ConvertingProperty()
+    negative_gradient_limit = ConvertingProperty()
 
-    fix = SequenceProperty()
-    maximum = SequenceProperty()
-    minimum = SequenceProperty()
+    fix = ConvertingProperty()
+    maximum = ConvertingProperty()
+    minimum = ConvertingProperty()

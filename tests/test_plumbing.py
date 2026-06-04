@@ -12,7 +12,8 @@ import pandas as pd
 import pytest
 
 from oemof.solph._plumbing import _FakeSequence
-from oemof.solph._plumbing import SequenceProperty
+from oemof.solph._plumbing import SequenceDict
+from oemof.solph._plumbing import ConvertingProperty
 from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 
@@ -61,10 +62,23 @@ def test_fake_sequence():
         assert (seq2 == np.array(2 * [84])).all()
 
 
+def test_sequence_dict():
+    d0 = SequenceDict()
+    d0["a"] = 5
+    assert isinstance(d0["a"], _FakeSequence)
+    assert d0["a"][0] == 5
+
+    d1 = SequenceDict({"b": [1, 2, 3], 3: 20})
+    assert isinstance(d1["b"], np.ndarray)
+    assert isinstance(d1[3], _FakeSequence)
+    assert (d1["b"] == [1, 2, 3]).all()
+    assert d1[3][0] == 20
+
+
 def test_sequence_property():
     class TestClass:
-        x = SequenceProperty()
-        y = SequenceProperty("y")
+        x = ConvertingProperty()
+        y = ConvertingProperty("y")
 
         def __init__(self, x):
             self.x = x
@@ -82,6 +96,22 @@ def test_sequence_property():
     i2 = TestClass([1, 2])
     assert (i2.x == [1, 2]).all()
     assert (i2.y == [1, 2]).all()
+
+
+def test_int_property():
+    class TestClass:
+        x = ConvertingProperty(type_converter=int)
+
+        def __init__(self, x):
+            self.x = x
+
+    i1 = TestClass(1)
+    assert isinstance(i1.x, int)
+    assert i1.x == 1
+
+    i2 = TestClass(2.0)
+    assert isinstance(i2.x, int)
+    assert i2.x == 2
 
 
 def test_sequence():

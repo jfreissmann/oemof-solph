@@ -114,10 +114,20 @@ def valid_sequence(sequence, length: int) -> bool:
     return False
 
 
-class SequenceProperty:
+class SequenceDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key, value in self.items():
+            self[key] = value
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key, sequence(value))
+
+class ConvertingProperty:
     """Descriptor class for properties that should contain sequences
     """
-    def __init__(self, default=None):
+    def __init__(self, default=None, type_converter=sequence):
+        self.type_converter = type_converter
         self.value = default
         self.name = None
 
@@ -130,7 +140,7 @@ class SequenceProperty:
         return getattr(obj, self.name, self.value)
 
     def __set__(self, obj, value):
-        setattr(obj, self.name, sequence(value))
+        setattr(obj, self.name, self.type_converter(value))
 
 
 class _FakeSequence:

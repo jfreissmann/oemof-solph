@@ -20,7 +20,7 @@ from warnings import warn
 
 from oemof.tools import debugging
 
-from oemof.solph._plumbing import SequenceProperty
+from oemof.solph._plumbing import ConvertingProperty
 
 
 class Investment:
@@ -139,11 +139,11 @@ class Investment:
         self._check_invest_attributes_nonconvex()
         self._check_nonconvex()
 
-    maximum = SequenceProperty()
-    minimum = SequenceProperty()
-    ep_costs = SequenceProperty()
-    offset = SequenceProperty()
-    fixed_costs = SequenceProperty()
+    maximum = ConvertingProperty()
+    minimum = ConvertingProperty()
+    ep_costs = ConvertingProperty()
+    offset = ConvertingProperty()
+    fixed_costs = ConvertingProperty()
 
     def _check_invest_attributes(self):
         """Throw an error if existing is other than 0 and nonconvex is True"""
@@ -309,11 +309,11 @@ class NonConvex:
         else:
             self.first_flexible_timestep = self.minimum_uptime[0]
 
-    minimum_uptime = SequenceProperty()
-    minimum_downtime = SequenceProperty()
-    startup_costs = SequenceProperty()
-    shutdown_costs = SequenceProperty()
-    activity_costs = SequenceProperty()
-    inactivity_costs = SequenceProperty()
-    negative_gradient_limit = SequenceProperty()
-    positive_gradient_limit = SequenceProperty()
+    minimum_uptime = ConvertingProperty()
+    minimum_downtime = ConvertingProperty()
+    startup_costs = ConvertingProperty()
+    shutdown_costs = ConvertingProperty()
+    activity_costs = ConvertingProperty()
+    inactivity_costs = ConvertingProperty()
+    negative_gradient_limit = ConvertingProperty()
+    positive_gradient_limit = ConvertingProperty()

@@ -41,7 +41,7 @@ from pyomo.environ import Var
 
 from oemof.solph._helpers import check_node_object_for_missing_attribute
 from oemof.solph._options import Investment
-from oemof.solph._plumbing import SequenceProperty
+from oemof.solph._plumbing import ConvertingProperty
 from oemof.solph._plumbing import valid_sequence
 from oemof.solph.flows import Flow
 
@@ -276,18 +276,18 @@ class GenericStorage(Node):
             self.max_charge_capacity = flow.nominal_capacity
             self.relative_charge_limit = flow.maximum
 
-    invest_relation_input_output = SequenceProperty()
-    invest_relation_input_capacity = SequenceProperty()
-    invest_relation_output_capacity = SequenceProperty()
-    loss_rate = SequenceProperty()
-    fixed_losses_relative = SequenceProperty()
-    fixed_losses_absolute = SequenceProperty()
-    inflow_conversion_factor = SequenceProperty()
-    outflow_conversion_factor = SequenceProperty()
-    max_storage_level = SequenceProperty()
-    min_storage_level = SequenceProperty()
-    fixed_costs = SequenceProperty()
-    storage_costs = SequenceProperty()
+    invest_relation_input_output = ConvertingProperty()
+    invest_relation_input_capacity = ConvertingProperty()
+    invest_relation_output_capacity = ConvertingProperty()
+    loss_rate = ConvertingProperty()
+    fixed_losses_relative = ConvertingProperty()
+    fixed_losses_absolute = ConvertingProperty()
+    inflow_conversion_factor = ConvertingProperty()
+    outflow_conversion_factor = ConvertingProperty()
+    max_storage_level = ConvertingProperty()
+    min_storage_level = ConvertingProperty()
+    fixed_costs = ConvertingProperty()
+    storage_costs = ConvertingProperty()
 
     def _check_number_of_flows(self):
         """Ensure that there is only one inflow and outflow to the storage"""
