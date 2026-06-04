@@ -12,6 +12,7 @@ import pandas as pd
 import pytest
 
 from oemof.solph._plumbing import _FakeSequence
+from oemof.solph._plumbing import SequenceProperty
 from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 
@@ -58,6 +59,19 @@ def test_fake_sequence():
 
         seq2 = np.array([2, 2]) * seq
         assert (seq2 == np.array(2 * [84])).all()
+
+def test_sequence_property():
+    class TestClass:
+        x = SequenceProperty(None)
+
+        def __init__(self, x):
+            self.x = x
+
+    i1 = TestClass(1)
+    assert i1.x[0] == 1
+
+    i2 = TestClass([1, 2])
+    assert (i2.x == [1, 2]).all()
 
 
 def test_sequence():
