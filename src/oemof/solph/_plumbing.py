@@ -49,6 +49,11 @@ def sequence(iterable_or_scalar, length=None):
     10
 
     """
+    if iterable_or_scalar is None:
+        return None
+    if isinstance(iterable_or_scalar, _FakeSequence):
+        iterable_or_scalar.size = length
+        return iterable_or_scalar
     if len(np.shape(iterable_or_scalar)) > 1:
         d = len(np.shape(iterable_or_scalar))
         raise ValueError(
@@ -57,8 +62,6 @@ def sequence(iterable_or_scalar, length=None):
             "on.\nPlease notice that a table with one column is still a table "
             "with 2 dimensions and not a Series."
         )
-    if iterable_or_scalar is None:
-        return None
     if isinstance(iterable_or_scalar, abc.Iterable):
         if length and length is not len(iterable_or_scalar):
             raise ValueError(
