@@ -11,9 +11,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oemof.solph._plumbing import _FakeSequence
-from oemof.solph._plumbing import SequenceDict
 from oemof.solph._plumbing import ConvertingProperty
+from oemof.solph._plumbing import SequenceDict
+from oemof.solph._plumbing import _FakeSequence
 from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 
