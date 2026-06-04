@@ -27,6 +27,8 @@ from pyomo.environ import BuildAction
 from pyomo.environ import Constraint
 
 from oemof.solph._helpers import warn_if_missing_attribute
+from oemof.solph._plumbing import ConvertingProperty
+from oemof.solph._plumbing import SequenceDict
 from oemof.solph._plumbing import sequence
 
 
@@ -110,9 +112,8 @@ class Link(Node):
             warn_if_missing_attribute(self, "conversion_factors")
             conversion_factors = {}
 
-        # TODO setters here
         self.conversion_factors = {
-            k: sequence(v) for k, v in conversion_factors.items()
+            k: v for k, v in conversion_factors.items()
         }
         msg = (
             "Component `Link` should have exactly "
@@ -129,6 +130,8 @@ class Link(Node):
             or len(self.conversion_factors) != 2
         ):
             warn(msg, debugging.SuspiciousUsageWarning)
+
+    conversion_factors = ConvertingProperty(type_converter=SequenceDict)
 
     def constraint_group(self):
         return LinkBlock
