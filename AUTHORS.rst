@@ -1,26 +1,21 @@
 Authors
 =======
 
---**alphabetic order**--
+--**in alphabetical order**--
 
-(`see full list on github <https://github.com/oemof/oemof-solph/graphs/contributors>`_)
-
-* Birgit Schachler
-* Brian Michael Lancien
+* Antonella Giannitelli
+* Bryan Michael Lancien
 * Caroline Möller
-* Caterina Köhl
-* Clemens Wingenbach
 * Cord Kaldemeyer
-* Daniel Rank
 * David Fuhrländer
-* Ekaterina Zolotarevskaya
+* Ekatarina Zolotarevskaia
 * Elisa Gaudchau
-* Elisa Papadis
 * Eva Schischke
 * Fabian Büllesbach
 * Francesco Witte
+* Franzi Pl
 * Guido Plessmann
-* Hendrik Hyskens
+* Hendrik Huyskens
 * Jakob Wolf
 * Jann Launer
 * Jens-Olaf Delfs
@@ -28,19 +23,20 @@ Authors
 * Johannes Röder
 * Jonas Freißmann
 * Jonathan Amme
-* Julian Endres
-* Lluis Millet
 * Lena Rosin
 * Lennart Schürmann
 * Malte Fritz
-* Martin Soethe
 * Marie-Claire Gering
+* Maximilian Hillen
 * Patrik Schönfeldt
+* Phillip Kassing
 * Pierre-François Duc
+* Raul Ciria Aylagas
+* Sabine Haas
 * Saeed Sayadi
 * Sarah Berendes
 * Simon Hilpert
 * Stephan Günther
-* Uwe Krien
+* Tjark Smalla
 * Tobi Rohrer
-
+* Uwe Krien
