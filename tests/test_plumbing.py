@@ -68,6 +68,14 @@ def test_sequence_dict():
     assert isinstance(d0["a"], _FakeSequence)
     assert d0["a"][0] == 5
 
+    d0.update({"b": 12, "c": 13})
+    assert isinstance(d0["a"], _FakeSequence)
+    assert isinstance(d0["b"], _FakeSequence)
+    assert isinstance(d0["c"], _FakeSequence)
+    assert d0["a"][0] == 5
+    assert d0["b"][0] == 12
+    assert d0["c"][0] == 13
+
     d1 = SequenceDict({"b": [1, 2, 3], 3: 20})
     assert isinstance(d1["b"], np.ndarray)
     assert isinstance(d1[3], _FakeSequence)

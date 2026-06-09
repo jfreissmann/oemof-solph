@@ -13,6 +13,7 @@ SPDX-License-Identifier: MIT
 
 import warnings
 from collections import abc
+from collections import UserDict
 from itertools import repeat
 
 import numpy as np
@@ -114,7 +115,7 @@ def valid_sequence(sequence, length: int) -> bool:
     return False
 
 
-class SequenceDict(dict):
+class SequenceDict(UserDict):
     """Dictionary that converts values to sequences"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
