@@ -9,162 +9,162 @@ title: "oemof.solph"
 abstract: "The oemof.solph package is part of the Open energy modelling framework (oemof). This an organisational framework to bundle tools for energy (system) modelling. oemof-solph is a model generator for energy system modelling and optimisation."
 authors:
   -
-    family-names: Krien
-    given-names: Uwe
-    alias: "@uvchik"
-    orcid: "https://orcid.org/0000-0002-1241-4425"
+    given-names: Antonella
+    family-names: Giannitelli
+    alias: "@AntonellaGia"
   -
-    family-names: "Schönfeldt"
+    given-names: Bryan
+    family-names: Lancien
+    alias: "@bmlancien"
+  -
+    given-names: Caroline
+    family-names: "Möller"
+    alias: "@c-moeller"
+  -
+    given-names: Cord
+    family-names: Kaldemeyer
+    alias: "@ckaldemeyer,
+            @ckaldemeyer-ane"
+  -
+    given-names: David
+    family-names: "Fuhrländer"
+    alias: "@DFuh"
+  -
+    given-names: Ekatarina
+    family-names: Zolotarevskaia
+    alias: "@e-zolotarevskaya"
+  -
+    given-names: Elisa
+    family-names: Gaudchau
+    alias: "@elisagaudchau"
+  -
+    given-names: Eva
+    family-names: Schischke
+    alias: "@esske"
+  -
+    given-names: Fabian
+    family-names: "Büllesbach"
+    alias: "@FabianTU"
+  -
+    given-names: Francesco
+    family-names: Witte
+    alias: "@fwitte"
+  -
+    given-names: Franzi
+    family-names: Pl
+    alias: "@FranziPl"
+  -
+    given-names: Guido
+    family-names: Plessmann
+    alias: "@gplssm"
+  -
+    given-names: Hendrik
+    family-names: Huyskens
+    alias: "@henhuy"
+  -
+    given-names: Jakob
+    family-names: Wolf
+    alias: "@jakob-wo"
+  -
+    given-names: Jann
+    family-names: Launer
+    alias: "@jnnr"
+  -
+    given-names: Jens-Olaf
+    family-names: Delfs
+    alias: "@drjod"
+  -
+    given-names: Johannes
+    family-names: Kochems
+    alias: "@jokochems"
+  -
+    given-names: Johannes
+    family-names: "Röder"
+    alias: "@joroeder"
+  -
+    given-names: Jonas
+    family-names: Freißmann
+    alias: "@jfreissmann"
+  -
+    given-names: Jonathan
+    family-names: Amme
+    alias: "@nesnoj"
+    orcid: "https://orcid.org/0000-0002-8563-5261"
+  -
+    given-names: Lena
+    family-names: Rosin
+    alias: "@leroum"
+  -
+    given-names: Lennart
+    family-names: "Schürmann"
+    alias: "@lensum"
+  -
+    given-names: Malte
+    family-names: Fritz
+    alias: "@maltefritz"
+  -
+    given-names: Marie-Claire
+    family-names: Gering
+    alias: "@MaGering"
+  -
+    given-names: Maximilian
+    family-names: Hillen
+    alias: "@Maxhi77"
+    orcid: "https://orcid.org/0000-0002-8171-2661"
+  -
     given-names: Patrik
+    family-names: "Schönfeldt"
     alias: "@p-snft"
     affiliation: "Deutsches Zentrum für Luft- und Raumfart (DLR)"
     orcid: "https://orcid.org/0000-0002-4311-2753"
   -
-    family-names: Kaldemeyer
-    given-names: Cord
-    alias: "@ckaldemeyer,
-            @ckaldemeyer-ane"
-  -
-    family-names: "Günther"
-    given-names: Stephan
-    alias: "@gnn"
-  -
-    family-names: Kochems
-    given-names: Johannes
-    alias: "@jokochems"
-  -
-    family-names: Simon
-    given-names: Hilpert
-    alias: "@simnh"
-  -
-    family-names: Launer
-    given-names: Jann
-    alias: "@jnnr"
-  -
-    family-names: Witte
-    given-names: Francesco
-    alias: "@fwitte"
-  -
-    family-names: "Röder"
-    given-names: Johannes
-    alias: "@joroeder"
-  -
-    family-names: "Möller"
-    given-names: Caroline
-    alias: "@c-moeller"
-  -
-    family-names: Huyskens
-    given-names: Hendrik
-    alias: "@henhuy"
-  -
-    family-names: "Schürmann"
-    given-names: Lennart
-    alias: "@lensum"
-  -
-    family-names: Freißmann
-    given-names: Jonas
-    alias: "@jfreissmann"
-  -
-    family-names: Hillen
-    given-names: Maximilian
-    alias: "@Maxhi77"
-    orcid: "https://orcid.org/0000-0002-8171-2661"
-  -
-    family-names: Duc
-    given-names: Pierre-François
-    alias: "@Bachibouzouk"
-  -
-    family-names: Fritz
-    given-names: Malte
-    alias: "@maltefritz"
-  -
-    family-names: Schischke
-    given-names: Eva
-    alias: "@esske"
-  -
-    family-names: Giannitelli
-    given-names: Antonella
-    alias: "@AntonellaGia"
-  -
-    family-names: Sayadi
-    given-names: Saeed
-    alias: "@sasa821"
-  -
-    family-names: Pl
-    given-names: Franzi
-    alias: "@FranziPl"
-  -
-    family-names: "Büllesbach"
-    given-names: Fabian
-    alias: "@FabianTU"
-  -
-    family-names: Berendes
-    given-names: Sarah
-    alias: "@srhbrnds"
-  -
-    family-names: "Fuhrländer"
-    given-names: David
-    alias: "@DFuh"
-  -
-    family-names: Plessmann
-    given-names: Guido
-    alias: "@gplssm"
-  -
-    family-names: Kassing
     given-names: Phillip
+    family-names: Kassing
     alias: "pkassing"
   -
-    family-names: Zolotarevskaia
-    given-names: Ekatarina
-    alias: "@e-zolotarevskaya"
+    given-names: Pierre-François
+    family-names: Duc
+    alias: "@Bachibouzouk"
   -
-    family-names: Lancien
-    given-names: Bryan
-    alias: "@bmlancien"
-  -
-    family-names: Rosin
-    given-names: Lena
-    alias: "@leroum"
-  -
-    family-names: Amme
-    given-names: Jonathan
-    alias: "@nesnoj"
-    orcid: "https://orcid.org/0000-0002-8563-5261"
-  -
-    family-names: Rohrer
-    given-names: Tobi
-    alias: "@tobirohrer"
-  -
-    family-names: Haas
-    given-names: Sabine
-    alias: "@SabineHaas"
-  -
-    family-names: Gering
-    given-names: Marie-Claire
-    alias: "@MaGering"
-  -
-    family-names: Delfs
-    given-names: Jens-Olaf
-    alias: "@drjod"
-  -
-    family-names: Smalla
-    given-names: Tjark
-    alias: "@ChillkroeteTTS"
-  -
-    family-names: Wolf
-    given-names: Jakob
-    alias: "@jakob-wo"
-  -
-    family-names: Aylagas
     given-names: Raul Ciria
+    family-names: Aylagas
     alias: "@Raul-Ciria-Aylagas"
   -
-    family-names: Gaudchau
-    given-names: Elisa
-    alias: "@elisagaudchau"
+    given-names: Sabine
+    family-names: Haas
+    alias: "@SabineHaas"
   -
-    family-names: Developers
+    given-names: Saeed
+    family-names: Sayadi
+    alias: "@sasa821"
+  -
+    given-names: Sarah
+    family-names: Berendes
+    alias: "@srhbrnds"
+  -
+    given-names: Simon
+    family-names: Hilpert
+    alias: "@simnh"
+  -
+    given-names: Stephan
+    family-names: "Günther"
+    alias: "@gnn"
+  -
+    given-names: Tjark
+    family-names: Smalla
+    alias: "@ChillkroeteTTS"
+  -
+    given-names: Tobi
+    family-names: Rohrer
+    alias: "@tobirohrer"
+  -
+    given-names: Uwe
+    family-names: Krien
+    alias: "@uvchik"
+    orcid: "https://orcid.org/0000-0002-1241-4425"
+  -
     given-names: Unnamed
+    family-names: Developers
     alias: "@steffenGit,
             @lmilletb,
             @mloenneberga,
