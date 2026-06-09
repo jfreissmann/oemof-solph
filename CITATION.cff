@@ -1,6 +1,6 @@
 # YAML 1.2
 ---
-cff-version: "1.1.0"
+cff-version: "1.2.0"
 doi: "10.5281/zenodo.596235"
 url: "https://github.com/oemof/oemof-solph/"
 license: MIT
@@ -22,9 +22,8 @@ authors:
   -
     family-names: Kaldemeyer
     given-names: Cord
-    aliases:
-      - "@ckaldemeyer"
-      - "@ckaldemeyer-ane"
+    alias: "@ckaldemeyer,
+            @ckaldemeyer-ane"
   -
     family-names: "Günther"
     given-names: Stephan
@@ -83,7 +82,7 @@ authors:
     given-names: Eva
     alias: "@esske"
   -
-    familiy-names: Giannitelli
+    family-names: Giannitelli
     given-names: Antonella
     alias: "@AntonellaGia"
   -
@@ -136,7 +135,7 @@ authors:
     given-names: Tobi
     alias: "@tobirohrer"
   -
-    familiy-names: Haas
+    family-names: Haas
     given-names: Sabine
     alias: "@SabineHaas"
   -
@@ -166,21 +165,20 @@ authors:
   -
     family-names: Developers
     given-names: Unnamed
-    aliases:
-      - "@steffenGit"
-      - "@lmilletb"
-      - "@mloenneberga"
-      - "@Siebenfrucht"
-      - "@MedinavonLevetzow"
-      - "@RD-OTH"
-      - "@paulapreuss"
-      - "@richartkeil"
-      - "@pranaykasturi"
-      - "@stefansc1"
-      - "@jdwit"
-      - "@escalacjo"
-      - "@ajimenezUCLA"
-      - "@elisapap"
-      - "@vjangle"
-      - "@chrisflei"
+    alias: "@steffenGit,
+            @lmilletb,
+            @mloenneberga,
+            @Siebenfrucht,
+            @MedinavonLevetzow,
+            @RD-OTH,
+            @paulapreuss,
+            @richartkeil,
+            @pranaykasturi,
+            @stefansc1,
+            @jdwit,
+            @escalacjo,
+            @ajimenezUCLA,
+            @elisapap,
+            @vjangle,
+            @chrisflei"
 ...
