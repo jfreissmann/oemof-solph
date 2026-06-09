@@ -12,8 +12,8 @@ SPDX-License-Identifier: MIT
 """
 
 import warnings
-from collections import abc
 from collections import UserDict
+from collections import abc
 from itertools import repeat
 
 import numpy as np
