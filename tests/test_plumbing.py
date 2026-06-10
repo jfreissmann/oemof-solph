@@ -17,6 +17,8 @@ from oemof.solph._plumbing import valid_sequence
 
 
 def test_fake_sequence():
+    seq_lt = _FakeSequence(7)
+    seq_gt = _FakeSequence(64)
     seq0 = _FakeSequence(42.0)
     seq_mul = 2 * _FakeSequence(21.0)
     seq_rmul = _FakeSequence(2.0) * 21
@@ -33,6 +35,30 @@ def test_fake_sequence():
         assert seq.min() == 42
         assert seq.value == 42
         assert seq.sum() == np.inf
+
+        assert seq_lt < seq
+        assert seq_lt <= seq
+        assert seq0 <= seq
+        assert seq0 == seq
+        assert seq0 >= seq
+        assert seq_gt >= seq
+        assert seq_gt > seq
+
+        assert seq_lt < 42
+        assert seq_lt <= 42
+        assert seq0 <= 42
+        assert seq0 == 42
+        assert seq0 >= 42
+        assert seq_gt >= 42
+        assert seq_gt > 42
+
+        assert 42 > seq_lt
+        assert 42 >= seq_lt
+        assert 42 >= seq0
+        assert 42 == seq0
+        assert 42 <= seq0
+        assert 42 <= seq_gt
+        assert 42 < seq_gt
 
         assert str(seq) == "[42.0, 42.0, ..., 42.0]"
 

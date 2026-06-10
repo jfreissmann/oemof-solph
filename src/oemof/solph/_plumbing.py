@@ -13,6 +13,7 @@ SPDX-License-Identifier: MIT
 
 import warnings
 from collections import abc
+from functools import total_ordering
 from itertools import repeat
 
 import numpy as np
@@ -111,6 +112,7 @@ def valid_sequence(sequence, length: int) -> bool:
     return False
 
 
+@total_ordering
 class _FakeSequence:
     """Emulates a list whose length is not known in advance.
 
@@ -182,6 +184,18 @@ class _FakeSequence:
             raise ValueError(
                 "Length needs to be defined for casting to numpy."
             )
+
+    def __eq__(self, other):
+        if isinstance(other, _FakeSequence):
+            return self.value == other.value
+        else:
+            return self.value == other
+
+    def __lt__(self, other):
+        if isinstance(other, _FakeSequence):
+            return self.value < other.value
+        else:
+            return self.value < other
 
     def __mul__(self, other):
         return sequence(self._value * other, length=self._length)
