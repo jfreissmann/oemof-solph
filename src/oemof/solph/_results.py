@@ -48,32 +48,32 @@ class Results:
         self._variables = {}
         self._model = model
 
-        for vardata in model.component_data_objects(Var):
-            for variable in [vardata.parent_component()]:
-                # name of the variable
-                key = str(variable).split(".")[-1]
-                # where the variable is found in the model
-                occurence = str(variable)[: -(len(key) + 1)]
-                if (
-                    key not in self._variables
-                    and key not in self._solver_results
-                ):  # variable found for the first time
-                    self._variables[key] = {occurence: variable}
-                elif (
-                    key in self._variables
-                    and occurence not in self._variables[key]
-                ):
-                    # Variable known name found somewhere new in the model.
-                    # Aligning names is particularly useful when they name
-                    # the same thing in different Blocks.
-                    self._variables[key][occurence] = variable
-                else:
-                    # Only left option should be
-                    # self._variables[key][occurence] == variable.
-                    # Iterated over the same thing twice.
-                    # Case for debugging purposes.
-                    # We should avoid useless iterations.
-                    pass
+        for variable in model.component_objects(Var):
+            var_name = variable.getname()
+            # name of the variable
+            key = var_name.split(".")[-1]
+            # where the variable is found in the model
+            occurence = variable.parent_block()
+
+            if (
+                key not in self._variables and key not in self._solver_results
+            ):  # variable found for the first time
+                self._variables[key] = {occurence: variable}
+            elif (
+                key in self._variables
+                and occurence not in self._variables[key]
+            ):
+                # Variable known name found somewhere new in the model.
+                # Aligning names is particularly useful when they name
+                # the same thing in different Blocks.
+                self._variables[key][occurence] = variable
+            else:
+                # Only left option should be
+                # self._variables[key][occurence] == variable.
+                # Iterated over the same thing twice.
+                # Case for debugging purposes.
+                # We should avoid useless iterations.
+                pass
 
         # adss additional keys for the calculation of opex and capex
         # if the keyword eval_economy is True
