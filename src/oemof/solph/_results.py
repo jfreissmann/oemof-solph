@@ -148,7 +148,9 @@ class Results:
             # if third-party code introduces a variable name collision.
             rv = pd.concat(rv, axis=1)
 
-            if rv.empty is False:
+            if rv.empty is True:
+                rv = default
+            else:
                 # overwrite known indexes
                 index_type = tuple(dataset.index_set().subsets())[-1].name
                 match index_type:
