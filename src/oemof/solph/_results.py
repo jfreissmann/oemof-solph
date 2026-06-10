@@ -148,15 +148,16 @@ class Results:
             # if third-party code introduces a variable name collision.
             rv = pd.concat(rv, axis=1)
 
-            # overwrite known indexes
-            index_type = tuple(dataset.index_set().subsets())[-1].name
-            match index_type:
-                case "TIMEPOINTS":
-                    rv.index = self._model.es.timeindex
-                case "TIMESTEPS":
-                    rv.index = self._model.es.timeindex[:-1]
-                case _:
-                    rv.index = rv.index.get_level_values(-1)
+            if rv.empty is False:
+                # overwrite known indexes
+                index_type = tuple(dataset.index_set().subsets())[-1].name
+                match index_type:
+                    case "TIMEPOINTS":
+                        rv.index = self._model.es.timeindex
+                    case "TIMESTEPS":
+                        rv.index = self._model.es.timeindex[:-1]
+                    case _:
+                        rv.index = rv.index.get_level_values(-1)
         else:
             rv = default
         return rv
@@ -266,7 +267,7 @@ class Results:
         self._economy_calculation_waring()
         df_opex = pd.DataFrame()
 
-        # extract the the optimized flow values
+        # extract the optimized flow values
         flow_values = self.get("flow", pd.DataFrame())
 
         for i, o in self._model.FLOWS:
