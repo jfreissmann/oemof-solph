@@ -27,7 +27,6 @@ def test_fake_sequence():
     for seq in [seq0, seq_mul, seq_rmul, seq_div]:
         assert seq[0] == 42
         assert seq.size is None
-
         assert seq[10] == 42
         assert seq.size is None
 
@@ -35,6 +34,11 @@ def test_fake_sequence():
         assert seq.min() == 42
         assert seq.value == 42
         assert seq.sum() == np.inf
+
+        assert len(seq[0:1]) == 1
+        assert len(seq[:2]) == 2
+        assert len(seq[1:2]) == 1
+        assert len(seq[1:-1]) == 0
 
         assert seq_lt < seq
         assert seq_lt <= seq
@@ -44,21 +48,22 @@ def test_fake_sequence():
         assert seq_gt >= seq
         assert seq_gt > seq
 
-        assert seq_lt < 42
-        assert seq_lt <= 42
-        assert seq0 <= 42
-        assert seq0 == 42
-        assert seq0 >= 42
-        assert seq_gt >= 42
-        assert seq_gt > 42
+        for other in [42, [42, 42]]:
+            assert seq_lt < other
+            assert seq_lt <= other
+            assert seq0 <= other
+            assert seq0 == other
+            assert seq0 >= other
+            assert seq_gt >= other
+            assert seq_gt > other
 
-        assert 42 > seq_lt
-        assert 42 >= seq_lt
-        assert 42 >= seq0
-        assert 42 == seq0
-        assert 42 <= seq0
-        assert 42 <= seq_gt
-        assert 42 < seq_gt
+            assert other > seq_lt
+            assert other >= seq_lt
+            assert other >= seq0
+            assert other == seq0
+            assert other <= seq0
+            assert other <= seq_gt
+            assert other < seq_gt
 
         assert str(seq) == "[42.0, 42.0, ..., 42.0]"
 

@@ -13,7 +13,6 @@ SPDX-License-Identifier: MIT
 
 import warnings
 from collections import abc
-from functools import total_ordering
 from itertools import repeat
 
 import numpy as np
@@ -112,9 +111,8 @@ def valid_sequence(sequence, length: int) -> bool:
     return False
 
 
-@total_ordering
 class _FakeSequence:
-    """Emulates a list whose length is not known in advance.
+    """Emulates a sequence whose length is not known in advance.
 
     Parameters
     ----------
@@ -145,8 +143,23 @@ class _FakeSequence:
     def size(self, value):
         self._length = value
 
-    def __getitem__(self, _):
-        return self._value
+    def __getitem__(self, i):
+        if isinstance(i, slice):
+            start = 0
+            stop = -1
+            step = 1
+            if i.start:
+                start = i.start
+            if i.stop:
+                stop = i.stop
+            if i.step:
+                step = (i.step) // step
+            length = stop - start
+            if length <= 0:
+                length = None
+            return _FakeSequence(self._value, length=length)
+        else:
+            return self._value
 
     def __repr__(self):
         if self._length is not None:
@@ -188,14 +201,42 @@ class _FakeSequence:
     def __eq__(self, other):
         if isinstance(other, _FakeSequence):
             return self.value == other.value
+        elif isinstance(other, abc.Iterable):
+            return self.value == min(other) == max(other)
         else:
             return self.value == other
 
     def __lt__(self, other):
         if isinstance(other, _FakeSequence):
             return self.value < other.value
+        elif isinstance(other, abc.Iterable):
+            return self.value < min(other)
         else:
             return self.value < other
+
+    def __le__(self, other):
+        if isinstance(other, _FakeSequence):
+            return self.value <= other.value
+        elif isinstance(other, abc.Iterable):
+            return self.value <= min(other)
+        else:
+            return self.value <= other
+
+    def __gt__(self, other):
+        if isinstance(other, _FakeSequence):
+            return self.value > other.value
+        elif isinstance(other, abc.Iterable):
+            return self.value > max(other)
+        else:
+            return self.value > other
+
+    def __ge__(self, other):
+        if isinstance(other, _FakeSequence):
+            return self.value >= other.value
+        elif isinstance(other, abc.Iterable):
+            return self.value >= max(other)
+        else:
+            return self.value >= other
 
     def __mul__(self, other):
         return sequence(self._value * other, length=self._length)
