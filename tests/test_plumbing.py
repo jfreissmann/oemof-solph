@@ -18,19 +18,38 @@ from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 
 
-def test_fake_sequence():
-    seq = _FakeSequence(42.0)
+def test_fake_sequence_access():
+    seq = _FakeSequence(7)
 
     assert len(seq[0:1]) == 1
     assert len(seq[:2]) == 2
     assert len(seq[1:2]) == 1
+    assert len(seq[1:4]) == 3
+    assert len(seq[1:4:2]) == 1
+    assert len(seq[:4:2]) == 2
     assert len(seq[1:-1]) == 0
+    assert len(seq[1:]) == 0
+    assert len(seq[1:-2]) == 0
 
-    assert seq[0] == 42
+    assert seq[0] == 7
     assert seq.size is None
-    assert seq[10] == 42
+    assert seq[10] == 7
     assert seq.size is None
 
+    seq = _FakeSequence(7, 8)
+    assert len(seq[0:1]) == 1
+    assert len(seq[:2]) == 2
+    assert len(seq[1:2]) == 1
+    assert len(seq[1:4]) == 3
+    assert len(seq[1:4:2]) == 1
+    assert len(seq[:4:2]) == 2
+    assert len(seq[1:-1]) == 6
+    assert len(seq[1:]) == 6
+    assert len(seq[1:-2]) == 5
+
+
+def test_fake_sequence():
+    seq = _FakeSequence(42.0)
     assert seq.max() == 42
     assert seq.min() == 42
     assert seq.value == 42
@@ -75,7 +94,7 @@ def test_fake_sequence_compare():
     with pytest.raises(ValueError, match="The truth value of an array"):
         bool(seq_gt > seq0)
 
-    for other in [42, [42, 42], np.array([42, 42])]:
+    for other in [42, [42, 42], np.array([42, 42]), _FakeSequence(42, 3)]:
         assert (seq_lt < other).all()
         assert (seq_lt <= other).all()
         assert (seq0 <= other).all()

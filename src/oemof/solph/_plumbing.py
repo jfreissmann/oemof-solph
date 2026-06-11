@@ -210,8 +210,10 @@ class _FakeSequence:
             if i.stop:
                 stop = i.stop
             if i.step:
-                step = (i.step) // step
-            length = stop - start
+                step = i.step
+            if self.size and stop < 0:
+                stop = self.size + stop
+            length = (stop - start) // step
             if length <= 0:
                 length = None
             return _FakeSequence(self._value, length=length)
