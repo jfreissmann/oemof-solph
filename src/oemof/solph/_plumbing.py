@@ -126,7 +126,7 @@ class SequenceDict(UserDict):
         super().__setitem__(key, sequence(value))
 
 
-class ConvertingProperty:
+class Apply:
     """Descriptor class for properties that should contain sequences
     """
     def __init__(self, default=None, type_converter=sequence):

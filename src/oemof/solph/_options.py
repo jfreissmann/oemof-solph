@@ -20,7 +20,7 @@ from warnings import warn
 
 from oemof.tools import debugging
 
-from oemof.solph._plumbing import ConvertingProperty
+from oemof.solph._plumbing import Apply
 
 
 class Investment:
@@ -139,11 +139,11 @@ class Investment:
         self._check_invest_attributes_nonconvex()
         self._check_nonconvex()
 
-    maximum = ConvertingProperty()
-    minimum = ConvertingProperty()
-    ep_costs = ConvertingProperty()
-    offset = ConvertingProperty()
-    fixed_costs = ConvertingProperty()
+    maximum = Apply()
+    minimum = Apply()
+    ep_costs = Apply()
+    offset = Apply()
+    fixed_costs = Apply()
 
     def _check_invest_attributes(self):
         """Throw an error if existing is other than 0 and nonconvex is True"""
@@ -309,11 +309,11 @@ class NonConvex:
         else:
             self.first_flexible_timestep = self.minimum_uptime[0]
 
-    minimum_uptime = ConvertingProperty()
-    minimum_downtime = ConvertingProperty()
-    startup_costs = ConvertingProperty()
-    shutdown_costs = ConvertingProperty()
-    activity_costs = ConvertingProperty()
-    inactivity_costs = ConvertingProperty()
-    negative_gradient_limit = ConvertingProperty()
-    positive_gradient_limit = ConvertingProperty()
+    minimum_uptime = Apply()
+    minimum_downtime = Apply()
+    startup_costs = Apply()
+    shutdown_costs = Apply()
+    activity_costs = Apply()
+    inactivity_costs = Apply()
+    negative_gradient_limit = Apply()
+    positive_gradient_limit = Apply()

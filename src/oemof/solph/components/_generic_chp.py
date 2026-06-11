@@ -27,7 +27,7 @@ from pyomo.environ import NonNegativeReals
 from pyomo.environ import Set
 from pyomo.environ import Var
 
-from oemof.solph._plumbing import ConvertingProperty
+from oemof.solph._plumbing import Apply
 
 
 class GenericCHP(Node):
@@ -151,7 +151,7 @@ class GenericCHP(Node):
         self.outputs.update(electrical_output)
         self.outputs.update(heat_output)
 
-    beta = ConvertingProperty()
+    beta = Apply()
 
     def _calculate_alphas(self):
         """

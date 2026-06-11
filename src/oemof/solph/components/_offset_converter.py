@@ -28,7 +28,7 @@ from pyomo.core.base.block import ScalarBlock
 from pyomo.environ import Constraint
 from pyomo.environ import Set
 
-from oemof.solph._plumbing import ConvertingProperty
+from oemof.solph._plumbing import Apply
 from oemof.solph._plumbing import SequenceDict
 from oemof.solph._plumbing import sequence
 
@@ -254,8 +254,8 @@ class OffsetConverter(Node):
         for cf in missing_normed_offsets_keys:
             self.normed_offsets[cf] = 0
 
-    conversion_factors = ConvertingProperty(type_converter=SequenceDict)
-    normed_offsets = ConvertingProperty(type_converter=SequenceDict)
+    conversion_factors = Apply(type_converter=SequenceDict)
+    normed_offsets = Apply(type_converter=SequenceDict)
 
     def constraint_group(self):
         return OffsetConverterBlock

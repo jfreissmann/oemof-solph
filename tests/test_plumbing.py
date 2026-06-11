@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oemof.solph._plumbing import ConvertingProperty
+from oemof.solph._plumbing import Apply
 from oemof.solph._plumbing import SequenceDict
 from oemof.solph._plumbing import _FakeSequence
 from oemof.solph._plumbing import sequence
@@ -83,10 +83,10 @@ def test_sequence_dict():
     assert d1[3][0] == 20
 
 
-def test_sequence_property():
+def test_Apply_descriptor():
     class TestClass:
-        x = ConvertingProperty()
-        y = ConvertingProperty("y")
+        x = Apply()
+        y = Apply("y")
 
         def __init__(self, x):
             self.x = x
@@ -106,9 +106,9 @@ def test_sequence_property():
     assert (i2.y == [1, 2]).all()
 
 
-def test_int_property():
+def test_using_Apply_to_convert_to_int():
     class TestClass:
-        x = ConvertingProperty(type_converter=int)
+        x = Apply(type_converter=int)
 
         def __init__(self, x):
             self.x = x
