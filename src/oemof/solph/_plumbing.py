@@ -116,7 +116,13 @@ def valid_sequence(sequence, length: int) -> bool:
 
 
 class SequenceDict(UserDict):
-    """Dictionary that converts values to sequences"""
+    """Convert values to `sequence`s upon insertion.
+
+    A drop-in replacement class for `dict`s, that calls `sequence` on
+    values before they are inserted and stores the result.
+
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key, value in self.items():
@@ -127,8 +133,22 @@ class SequenceDict(UserDict):
 
 
 class Apply:
-    """Descriptor class for properties that should contain sequences
+    """Apply `converter` to values assigned to this attribute.
+
+    Whenever a `value` is assigned to an attribute that uses this
+    descriptor, what's actually stored is the result of
+    `converter(value)`, e.g.:
+
+    >>> class Inverter:
+    ...     inverted = Apply(lambda x: -x)
+    ...
+    >>> one = Inverter()
+    >>> one.inverted = 1
+    >>> one.inverted
+    -1
+
     """
+
     def __init__(self, converter, default=None):
         self.converter = converter
         self.value = default
