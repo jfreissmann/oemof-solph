@@ -116,7 +116,7 @@ def valid_sequence(sequence, length: int) -> bool:
 
 
 class SequenceDict(UserDict):
-    """Convert values to `sequence`s upon insertion.
+    """Convert each value to a `sequence` upon insertion.
 
     A drop-in replacement class for `dict`s, that calls `sequence` on
     values before they are inserted and stores the result.
