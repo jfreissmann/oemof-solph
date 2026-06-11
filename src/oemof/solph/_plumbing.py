@@ -112,7 +112,7 @@ def valid_sequence(sequence, length: int) -> bool:
 
 
 class _FakeSequence:
-    """Emulates a sequence whose length is not known in advance.
+    """Emulates a numpy.array which length is not known in advance.
 
     Parameters
     ----------
@@ -269,6 +269,32 @@ class _FakeSequence:
             return self.value >= np.array(other)
         else:
             return _FakeSequence(self.value >= other, length=self.size)
+
+    def __add__(self, other):
+        if isinstance(other, _FakeSequence):
+            if self.size == other.size:
+                length = self.size
+            else:
+                length = None
+            return _FakeSequence(self.value + other.value, length=length)
+        elif isinstance(other, abc.Iterable):
+            return self.value + np.array(other)
+        else:
+            return _FakeSequence(self.value + other, length=self.size)
+
+    __radd__ = __add__
+
+    def __sub__(self, other):
+        if isinstance(other, _FakeSequence):
+            if self.size == other.size:
+                length = self.size
+            else:
+                length = None
+            return _FakeSequence(self.value - other.value, length=length)
+        elif isinstance(other, abc.Iterable):
+            return self.value - np.array(other)
+        else:
+            return _FakeSequence(self.value - other, length=self.size)
 
     def __mul__(self, other):
         return sequence(self._value * other, length=self._length)

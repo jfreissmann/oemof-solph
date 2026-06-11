@@ -150,6 +150,48 @@ def test_fake_sequence_compare():
     assert (other < seq_gt).any()
 
 
+def test_fake_sequence_addition():
+    n1 = 12
+    seq1_var = _FakeSequence(12)
+    seq1_len2 = _FakeSequence(12, 2)
+
+    n2 = 8
+    seq2_var = _FakeSequence(8)
+    seq2_len2 = _FakeSequence(8, 2)
+    seq2_len4 = _FakeSequence(8, 4)
+
+    for s1 in [n1, seq1_var, seq1_len2]:
+        for s2 in [n2, seq2_var, seq2_len2, seq2_len4]:
+            if isinstance(s1, _FakeSequence) or isinstance(s2, _FakeSequence):
+                added = s1 + s2
+                assert isinstance(added, _FakeSequence)
+                assert added.value == 20
+
+    array12 = np.array([1, 2])
+    assert ((array12 + seq1_len2) == np.array([13, 14])).all()
+    assert ((seq1_len2 + array12) == np.array([13, 14])).all()
+
+
+def test_fake_sequence_subtraction():
+    seq1_var = _FakeSequence(12)
+    seq1_len2 = _FakeSequence(12, 2)
+
+    n2 = 8
+    seq2_var = _FakeSequence(8)
+    seq2_len2 = _FakeSequence(8, 2)
+    seq2_len4 = _FakeSequence(8, 4)
+
+    for s1 in [seq1_var, seq1_len2]:
+        for s2 in [n2, seq2_var, seq2_len2, seq2_len4]:
+            if isinstance(s1, _FakeSequence) or isinstance(s2, _FakeSequence):
+                difference = s1 - s2
+                assert isinstance(difference, _FakeSequence)
+                assert difference.value == 4
+
+    array12 = np.array([1, 2])
+    assert ((seq1_len2 - array12) == np.array([11, 10])).all()
+
+
 def test_fake_sequence_multiplication():
     seq_mul = 2 * _FakeSequence(21.0)
     seq_rmul = _FakeSequence(2.0) * 21
