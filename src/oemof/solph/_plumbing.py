@@ -149,7 +149,9 @@ class Apply:
 
     """
 
-    def __init__(self, converter, default=None):
+    unset = object()
+
+    def __init__(self, converter, default=unset):
         self.converter = converter
         self.default = default
         self.name = None
@@ -158,6 +160,11 @@ class Apply:
         self.name = name
 
     def __get__(self, obj, objtype=None):
+        if (not hasattr(obj, f"_{self.name}")) and (self.default is self.unset):
+            raise AttributeError(
+                f"attribute '{self.name}' of '{objtype.__name__}'"
+                " object accessed before being assigned a value"
+            )
         return getattr(obj, f"_{self.name}", self.default)
 
     def __set__(self, obj, value):
