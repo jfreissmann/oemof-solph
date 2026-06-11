@@ -155,13 +155,13 @@ class Apply:
         self.name = None
 
     def __set_name__(self, owner, name):
-        self.name = "_" + name
+        self.name = name
 
     def __get__(self, obj, objtype=None):
-        return getattr(obj, self.name, self.value)
+        return getattr(obj, f"_{self.name}", self.value)
 
     def __set__(self, obj, value):
-        setattr(obj, self.name, self.converter(value))
+        setattr(obj, f"_{self.name}", self.converter(value))
 
 
 class _FakeSequence:
