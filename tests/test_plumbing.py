@@ -106,20 +106,26 @@ def test_Apply_descriptor():
     assert (i2.y == [1, 2]).all()
 
 
-def test_using_Apply_to_convert_to_int():
+def test_using_Apply_to_convert_to_numeric():
     class TestClass:
-        x = Apply(converter=int)
+        i = Apply(converter=int)
+        f = Apply(converter=float)
 
         def __init__(self, x):
-            self.x = x
+            self.i = x
+            self.f = x
 
     i1 = TestClass(1)
-    assert isinstance(i1.x, int)
-    assert i1.x == 1
+    assert isinstance(i1.i, int)
+    assert isinstance(i1.f, float)
+    assert i1.i == 1
+    assert i1.f == 1
 
     i2 = TestClass(2.0)
-    assert isinstance(i2.x, int)
-    assert i2.x == 2
+    assert isinstance(i2.i, int)
+    assert isinstance(i2.f, float)
+    assert i2.i == 2
+    assert i2.f == 2
 
 
 def test_sequence():
