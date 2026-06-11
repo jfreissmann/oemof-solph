@@ -92,6 +92,8 @@ class Converter(Node):
      * :py:class:`~oemof.solph.components._converter.ConverterBlock`
     """
 
+    conversion_factors = Apply(SequenceDict)
+
     def __init__(
         self,
         label=None,
@@ -131,8 +133,6 @@ class Converter(Node):
 
         for cf in missing_conversion_factor_keys:
             self.conversion_factors[cf] = 1
-
-    conversion_factors = Apply(SequenceDict)
 
     def constraint_group(self):
         return ConverterBlock

@@ -71,6 +71,8 @@ class ExtractionTurbineCHP(Converter):
     ...    conversion_factor_full_condensation={bel: 0.5})
     """  # noqa: E501
 
+    conversion_factor_full_condensation = Apply(SequenceDict)
+
     def __init__(
         self,
         conversion_factor_full_condensation,
@@ -92,8 +94,6 @@ class ExtractionTurbineCHP(Converter):
         self.conversion_factor_full_condensation = {
             k: v for k, v in conversion_factor_full_condensation.items()
         }
-
-    conversion_factor_full_condensation = Apply(SequenceDict)
 
     def constraint_group(self):
         return ExtractionTurbineCHPBlock

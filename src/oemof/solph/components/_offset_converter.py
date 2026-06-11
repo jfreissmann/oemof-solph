@@ -137,6 +137,9 @@ class OffsetConverter(Node):
 
     """  # noqa: E501
 
+    conversion_factors = Apply(SequenceDict)
+    normed_offsets = Apply(SequenceDict)
+
     def __init__(
         self,
         inputs,
@@ -249,9 +252,6 @@ class OffsetConverter(Node):
 
         for cf in missing_normed_offsets_keys:
             self.normed_offsets[cf] = 0
-
-    conversion_factors = Apply(SequenceDict)
-    normed_offsets = Apply(SequenceDict)
 
     def constraint_group(self):
         return OffsetConverterBlock

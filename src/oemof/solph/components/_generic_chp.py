@@ -120,6 +120,8 @@ class GenericCHP(Node):
     <class 'oemof.solph.components._generic_chp.GenericCHP'>
     """
 
+    beta = Apply(sequence)
+
     def __init__(
         self,
         fuel_input,
@@ -151,8 +153,6 @@ class GenericCHP(Node):
 
         self.outputs.update(electrical_output)
         self.outputs.update(heat_output)
-
-    beta = Apply(sequence)
 
     def _calculate_alphas(self):
         """

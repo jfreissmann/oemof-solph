@@ -86,6 +86,12 @@ class Investment:
 
     """  # noqa: E501
 
+    ep_costs = Apply(sequence)
+    fixed_costs = Apply(sequence)
+    maximum = Apply(sequence)
+    minimum = Apply(sequence)
+    offset = Apply(sequence)
+
     def __init__(
         self,
         maximum=float("+inf"),
@@ -139,12 +145,6 @@ class Investment:
         self._check_age_and_lifetime()
         self._check_invest_attributes_nonconvex()
         self._check_nonconvex()
-
-    maximum = Apply(sequence)
-    minimum = Apply(sequence)
-    ep_costs = Apply(sequence)
-    offset = Apply(sequence)
-    fixed_costs = Apply(sequence)
 
     def _check_invest_attributes(self):
         """Throw an error if existing is other than 0 and nonconvex is True"""
@@ -256,6 +256,15 @@ class NonConvex:
             (`flow[t-1] > flow[t]`) of two consecutive flow values.
     """
 
+    activity_costs = Apply(sequence)
+    inactivity_costs = Apply(sequence)
+    minimum_downtime = Apply(sequence)
+    minimum_uptime = Apply(sequence)
+    negative_gradient_limit = Apply(sequence)
+    positive_gradient_limit = Apply(sequence)
+    shutdown_costs = Apply(sequence)
+    startup_costs = Apply(sequence)
+
     def __init__(
         self,
         initial_status=0,
@@ -309,12 +318,3 @@ class NonConvex:
             self.first_flexible_timestep = self.minimum_downtime[0]
         else:
             self.first_flexible_timestep = self.minimum_uptime[0]
-
-    minimum_uptime = Apply(sequence)
-    minimum_downtime = Apply(sequence)
-    startup_costs = Apply(sequence)
-    shutdown_costs = Apply(sequence)
-    activity_costs = Apply(sequence)
-    inactivity_costs = Apply(sequence)
-    negative_gradient_limit = Apply(sequence)
-    positive_gradient_limit = Apply(sequence)

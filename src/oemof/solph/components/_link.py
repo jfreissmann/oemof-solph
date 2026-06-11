@@ -80,6 +80,8 @@ class Link(Node):
     0.8
     """
 
+    conversion_factors = Apply(SequenceDict)
+
     def __init__(
         self,
         label=None,
@@ -127,8 +129,6 @@ class Link(Node):
             or len(self.conversion_factors) != 2
         ):
             warn(msg, debugging.SuspiciousUsageWarning)
-
-    conversion_factors = Apply(SequenceDict)
 
     def constraint_group(self):
         return LinkBlock

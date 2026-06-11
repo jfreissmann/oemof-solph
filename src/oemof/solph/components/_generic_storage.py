@@ -172,6 +172,19 @@ class GenericStorage(Node):
     ...     outflow_conversion_factor=0.8)
     """  # noqa: E501
 
+    fixed_costs = Apply(sequence)
+    fixed_losses_absolute = Apply(sequence)
+    fixed_losses_relative = Apply(sequence)
+    inflow_conversion_factor = Apply(sequence)
+    invest_relation_input_capacity = Apply(sequence)
+    invest_relation_input_output = Apply(sequence)
+    invest_relation_output_capacity = Apply(sequence)
+    loss_rate = Apply(sequence)
+    max_storage_level = Apply(sequence)
+    min_storage_level = Apply(sequence)
+    outflow_conversion_factor = Apply(sequence)
+    storage_costs = Apply(sequence)
+
     def __init__(
         self,
         label=None,
@@ -276,19 +289,6 @@ class GenericStorage(Node):
             flow = next(v for k, v in self.inputs.items())
             self.max_charge_capacity = flow.nominal_capacity
             self.relative_charge_limit = flow.maximum
-
-    invest_relation_input_output = Apply(sequence)
-    invest_relation_input_capacity = Apply(sequence)
-    invest_relation_output_capacity = Apply(sequence)
-    loss_rate = Apply(sequence)
-    fixed_losses_relative = Apply(sequence)
-    fixed_losses_absolute = Apply(sequence)
-    inflow_conversion_factor = Apply(sequence)
-    outflow_conversion_factor = Apply(sequence)
-    max_storage_level = Apply(sequence)
-    min_storage_level = Apply(sequence)
-    fixed_costs = Apply(sequence)
-    storage_costs = Apply(sequence)
 
     def _check_number_of_flows(self):
         """Ensure that there is only one inflow and outflow to the storage"""

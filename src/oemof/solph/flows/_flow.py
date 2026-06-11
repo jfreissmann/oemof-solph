@@ -125,6 +125,16 @@ class Flow(Edge):
     0.99
     """  # noqa: E501
 
+    fix = Apply(sequence)
+    maximum = Apply(sequence)
+    minimum = Apply(sequence)
+
+    fixed_costs = Apply(sequence)
+    variable_costs = Apply(sequence)
+
+    positive_gradient_limit = Apply(sequence)
+    negative_gradient_limit = Apply(sequence)
+
     def __init__(
         self,
         nominal_capacity=None,
@@ -373,12 +383,3 @@ class Flow(Edge):
                 "Investment into a non-convex flows needs a maximum "
                 + "investment to be set."
             )
-
-    fixed_costs = Apply(sequence)
-    variable_costs = Apply(sequence)
-    positive_gradient_limit = Apply(sequence)
-    negative_gradient_limit = Apply(sequence)
-
-    fix = Apply(sequence)
-    maximum = Apply(sequence)
-    minimum = Apply(sequence)
