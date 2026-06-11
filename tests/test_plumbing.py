@@ -17,117 +17,101 @@ from oemof.solph._plumbing import valid_sequence
 
 
 def test_fake_sequence():
+    seq = _FakeSequence(42.0)
+
+    assert len(seq[0:1]) == 1
+    assert len(seq[:2]) == 2
+    assert len(seq[1:2]) == 1
+    assert len(seq[1:-1]) == 0
+
+    assert seq[0] == 42
+    assert seq.size is None
+    assert seq[10] == 42
+    assert seq.size is None
+
+    assert seq.max() == 42
+    assert seq.min() == 42
+    assert seq.value == 42
+    assert seq.sum() == np.inf
+
+    assert str(seq) == "[42.0, 42.0, ..., 42.0]"
+
+    with pytest.raises(ValueError, match="Length needs to be defined"):
+        seq.to_numpy()
+    assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
+
+    assert len(seq) == 0
+
+    seq.size = 2
+    assert seq.size == 2
+    assert len(seq) == 2
+
+    assert seq.max() == 42
+    assert seq.min() == 42
+    assert seq.value == 42
+    assert seq.sum() == 84
+
+    assert str(seq) == "[42.0, 42.0]"
+
+    assert (seq.to_numpy() == np.array(2 * [42])).all()
+    assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
+
+
+def test_fake_sequence_compare():
+    seq0 = _FakeSequence(42.0)
     seq_lt = _FakeSequence(7)
     seq_gt = _FakeSequence(64)
-    seq0 = _FakeSequence(42.0)
-    seq_mul = 2 * _FakeSequence(21.0)
-    seq_rmul = _FakeSequence(2.0) * 21
-    seq_div = _FakeSequence(84.0) / 2
 
-    for seq in [seq0, seq_mul, seq_rmul, seq_div]:
-        assert seq[0] == 42
-        assert seq.size is None
-        assert seq[10] == 42
-        assert seq.size is None
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq_lt < seq0)
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq_lt <= seq0)
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq0 <= seq0)
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq0 == seq0)
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq0 >= seq0)
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq_gt >= seq0)
+    with pytest.raises(ValueError, match="The truth value of an array"):
+        bool(seq_gt > seq0)
 
-        assert seq.max() == 42
-        assert seq.min() == 42
-        assert seq.value == 42
-        assert seq.sum() == np.inf
+    for other in [42, [42, 42], np.array([42, 42])]:
+        assert (seq_lt < other).all()
+        assert (seq_lt <= other).all()
+        assert (seq0 <= other).all()
+        assert (seq0 == other).all()
+        assert (seq0 >= other).all()
+        assert (seq_gt >= other).all()
+        assert (seq_gt > other).all()
 
-        assert len(seq[0:1]) == 1
-        assert len(seq[:2]) == 2
-        assert len(seq[1:2]) == 1
-        assert len(seq[1:-1]) == 0
+        assert (seq_lt < other).any()
+        assert (seq_lt <= other).any()
+        assert (seq0 <= other).any()
+        assert (seq0 == other).any()
+        assert (seq0 >= other).any()
+        assert (seq_gt >= other).any()
+        assert (seq_gt > other).any()
 
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq_lt < seq)
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq_lt <= seq)
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq0 <= seq)
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq0 == seq)
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq0 >= seq)
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq_gt >= seq)
-        with pytest.raises(ValueError, match="The truth value of an array"):
-            bool(seq_gt > seq)
+    for other in [[1, 42, 100], np.array([1, 42, 100])]:
+        assert not (seq_lt < other).all()
+        assert not (seq_lt <= other).all()
+        assert not (seq0 <= other).all()
+        assert not (seq0 == other).all()
+        assert not (seq0 >= other).all()
+        assert not (seq_gt >= other).all()
+        assert not (seq_gt > other).all()
 
-        for other in [42, [42, 42], np.array([42, 42])]:
-            assert (seq_lt < other).all()
-            assert (seq_lt <= other).all()
-            assert (seq0 <= other).all()
-            assert (seq0 == other).all()
-            assert (seq0 >= other).all()
-            assert (seq_gt >= other).all()
-            assert (seq_gt > other).all()
+        assert (seq_lt < other).any()
+        assert (seq_lt <= other).any()
+        assert (seq0 <= other).any()
+        assert (seq0 == other).any()
+        assert (seq0 >= other).any()
+        assert (seq_gt >= other).any()
+        assert (seq_gt > other).any()
 
-            assert (seq_lt < other).any()
-            assert (seq_lt <= other).any()
-            assert (seq0 <= other).any()
-            assert (seq0 == other).any()
-            assert (seq0 >= other).any()
-            assert (seq_gt >= other).any()
-            assert (seq_gt > other).any()
-
-        for other in [[1, 42, 100], np.array([1, 42, 100])]:
-            assert not (seq_lt < other).all()
-            assert not (seq_lt <= other).all()
-            assert not (seq0 <= other).all()
-            assert not (seq0 == other).all()
-            assert not (seq0 >= other).all()
-            assert not (seq_gt >= other).all()
-            assert not (seq_gt > other).all()
-
-            assert (seq_lt < other).any()
-            assert (seq_lt <= other).any()
-            assert (seq0 <= other).any()
-            assert (seq0 == other).any()
-            assert (seq0 >= other).any()
-            assert (seq_gt >= other).any()
-            assert (seq_gt > other).any()
-
-        assert str(seq) == "[42.0, 42.0, ..., 42.0]"
-
-        with pytest.raises(ValueError, match="Length needs to be defined"):
-            seq.to_numpy()
-        assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
-
-        assert len(seq) == 0
-
-        seq.size = 2
-        assert seq.size == 2
-        assert len(seq) == 2
-
-        assert seq.max() == 42
-        assert seq.min() == 42
-        assert seq.value == 42
-        assert seq.sum() == 84
-
-        for other in [42, [42, 42]]:
-            assert (other > seq_lt).all()
-            assert (other >= seq_lt).all()
-            assert (other >= seq0).all()
-            assert (other == seq0).all()
-            assert (other <= seq0).all()
-            assert (other <= seq_gt).all()
-            assert (other < seq_gt).all()
-
-            assert (other > seq_lt).any()
-            assert (other >= seq_lt).any()
-            assert (other >= seq0).any()
-            assert (other == seq0).any()
-            assert (other <= seq0).any()
-            assert (other <= seq_gt).any()
-            assert (other < seq_gt).any()
-
-        other = np.array([42, 42])
-        # comparision from numpy only works with set size
-        seq_lt.size = 2
-        seq_gt.size = 2
-        seq0.size = 2
+    for other in [42, [42, 42]]:
         assert (other > seq_lt).all()
         assert (other >= seq_lt).all()
         assert (other >= seq0).all()
@@ -144,13 +128,48 @@ def test_fake_sequence():
         assert (other <= seq_gt).any()
         assert (other < seq_gt).any()
 
-        assert str(seq) == "[42.0, 42.0]"
+    other = np.array([42, 42])
+    # comparision from numpy only works with set size
+    seq0.size = 2
+    seq_lt.size = 2
+    seq_gt.size = 2
+    assert (other > seq_lt).all()
+    assert (other >= seq_lt).all()
+    assert (other >= seq0).all()
+    assert (other == seq0).all()
+    assert (other <= seq0).all()
+    assert (other <= seq_gt).all()
+    assert (other < seq_gt).all()
 
-        assert (seq.to_numpy() == np.array(2 * [42])).all()
-        assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
+    assert (other > seq_lt).any()
+    assert (other >= seq_lt).any()
+    assert (other >= seq0).any()
+    assert (other == seq0).any()
+    assert (other <= seq0).any()
+    assert (other <= seq_gt).any()
+    assert (other < seq_gt).any()
 
-        seq2 = np.array([2, 2]) * seq
-        assert (seq2 == np.array(2 * [84])).all()
+
+def test_fake_sequence_multiplication():
+    seq_mul = 2 * _FakeSequence(21.0)
+    seq_rmul = _FakeSequence(2.0) * 21
+    seq_div = _FakeSequence(84.0) / 2
+    seq_imul = _FakeSequence(21.0)
+    seq_imul *= 2
+    seq_idiv = _FakeSequence(84)
+    seq_idiv /= 2
+
+    for seq in [seq_mul, seq_rmul, seq_div, seq_imul, seq_idiv]:
+        assert seq.value == 42
+
+    seq1 = _FakeSequence(42.0)
+    seq2 = seq1 * np.array([1, 2])
+    assert (seq2 == np.array([42, 84])).all()
+
+    seq1.size = 2
+    # only works with set size
+    seq3 = np.array([1, 2]) * seq1
+    assert (seq3 == np.array([42, 84])).all()
 
 
 def test_sequence():
