@@ -28,6 +28,8 @@ from pyomo.core.base.block import ScalarBlock
 from pyomo.environ import Constraint
 from pyomo.environ import Set
 
+from oemof.solph._plumbing import Apply
+from oemof.solph._plumbing import SequenceDict
 from oemof.solph._plumbing import sequence
 
 
@@ -135,6 +137,9 @@ class OffsetConverter(Node):
 
     """  # noqa: E501
 
+    conversion_factors = Apply(SequenceDict)
+    normed_offsets = Apply(SequenceDict)
+
     def __init__(
         self,
         inputs,
@@ -222,16 +227,14 @@ class OffsetConverter(Node):
                 "flow."
             )
 
-        self.conversion_factors = {
-            k: sequence(v) for k, v in conversion_factors.items()
-        }
+        self.conversion_factors = {k: v for k, v in conversion_factors.items()}
 
         missing_conversion_factor_keys = (
             set(self.outputs) | set(self.inputs)
         ) - set(self.conversion_factors)
 
         for cf in missing_conversion_factor_keys:
-            self.conversion_factors[cf] = sequence(1)
+            self.conversion_factors[cf] = 1
 
         if normed_offsets is None:
             normed_offsets = {}
@@ -241,16 +244,14 @@ class OffsetConverter(Node):
                 "Normed offsets cannot be specified for the `NonConvex` flow."
             )
 
-        self.normed_offsets = {
-            k: sequence(v) for k, v in normed_offsets.items()
-        }
+        self.normed_offsets = {k: v for k, v in normed_offsets.items()}
 
         missing_normed_offsets_keys = (
             set(self.outputs) | set(self.inputs)
         ) - set(self.normed_offsets)
 
         for cf in missing_normed_offsets_keys:
-            self.normed_offsets[cf] = sequence(0)
+            self.normed_offsets[cf] = 0
 
     def constraint_group(self):
         return OffsetConverterBlock
