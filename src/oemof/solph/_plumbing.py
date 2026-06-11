@@ -158,9 +158,6 @@ class Apply:
         self.data = {}
         self.name = None
 
-    def __set_name__(self, owner, name):
-        self.name = name
-
     def __get__(self, obj, objtype=None):
         if (id(obj) not in self.data) and (self.default is self.unset):
             raise AttributeError(
@@ -171,6 +168,9 @@ class Apply:
 
     def __set__(self, obj, value):
         self.data[id(obj)] = self.converter(value)
+
+    def __set_name__(self, owner, name):
+        self.name = name
 
 
 class _FakeSequence:
