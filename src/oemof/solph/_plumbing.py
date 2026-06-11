@@ -151,14 +151,14 @@ class Apply:
 
     def __init__(self, converter, default=None):
         self.converter = converter
-        self.value = default
+        self.default = default
         self.name = None
 
     def __set_name__(self, owner, name):
         self.name = name
 
     def __get__(self, obj, objtype=None):
-        return getattr(obj, f"_{self.name}", self.value)
+        return getattr(obj, f"_{self.name}", self.default)
 
     def __set__(self, obj, value):
         setattr(obj, f"_{self.name}", self.converter(value))
