@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from oemof.solph._plumbing import Apply
+from oemof.solph._plumbing import SequenceDict
 from oemof.solph._plumbing import _FakeSequence
 from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
@@ -221,6 +223,72 @@ def test_fake_sequence_multiplication():
     # only works with set size
     seq3 = np.array([1, 2]) * seq1
     assert (seq3 == np.array([42, 84])).all()
+
+
+def test_sequence_dict():
+    d0 = SequenceDict()
+    d0["a"] = 5
+    assert isinstance(d0["a"], _FakeSequence)
+    assert d0["a"][0] == 5
+
+    d0.update({"b": 12, "c": 13})
+    assert isinstance(d0["a"], _FakeSequence)
+    assert isinstance(d0["b"], _FakeSequence)
+    assert isinstance(d0["c"], _FakeSequence)
+    assert d0["a"][0] == 5
+    assert d0["b"][0] == 12
+    assert d0["c"][0] == 13
+
+    d1 = SequenceDict({"b": [1, 2, 3], 3: 20})
+    assert isinstance(d1["b"], np.ndarray)
+    assert isinstance(d1[3], _FakeSequence)
+    assert (d1["b"] == [1, 2, 3]).all()
+    assert d1[3][0] == 20
+
+
+def test_Apply_descriptor():
+    class TestClass:
+        x = Apply(sequence)
+        y = Apply(converter=sequence, default="y")
+
+        def __init__(self, x):
+            self.x = x
+            if x is not None:
+                self.y = x
+
+    i0 = TestClass(None)
+    assert i0.x is None
+    assert i0.y == "y"
+
+    i1 = TestClass(1)
+    assert i1.x[0] == 1
+    assert i1.y[42] == 1
+
+    i2 = TestClass([1, 2])
+    assert (i2.x == [1, 2]).all()
+    assert (i2.y == [1, 2]).all()
+
+
+def test_using_Apply_to_convert_to_numeric():
+    class TestClass:
+        i = Apply(converter=int)
+        f = Apply(converter=float)
+
+        def __init__(self, x):
+            self.i = x
+            self.f = x
+
+    i1 = TestClass(1)
+    assert isinstance(i1.i, int)
+    assert isinstance(i1.f, float)
+    assert i1.i == 1
+    assert i1.f == 1
+
+    i2 = TestClass(2.0)
+    assert isinstance(i2.i, int)
+    assert isinstance(i2.f, float)
+    assert i2.i == 2
+    assert i2.f == 2
 
 
 def test_sequence():

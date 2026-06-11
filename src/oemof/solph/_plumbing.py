@@ -12,6 +12,7 @@ SPDX-License-Identifier: MIT
 """
 
 import warnings
+from collections import UserDict
 from collections import abc
 from itertools import repeat
 
@@ -49,6 +50,11 @@ def sequence(iterable_or_scalar, length=None):
     10
 
     """
+    if iterable_or_scalar is None:
+        return None
+    if isinstance(iterable_or_scalar, _FakeSequence):
+        iterable_or_scalar.size = length
+        return iterable_or_scalar
     if len(np.shape(iterable_or_scalar)) > 1:
         d = len(np.shape(iterable_or_scalar))
         raise ValueError(
@@ -57,8 +63,6 @@ def sequence(iterable_or_scalar, length=None):
             "on.\nPlease notice that a table with one column is still a table "
             "with 2 dimensions and not a Series."
         )
-    if iterable_or_scalar is None:
-        return None
     if isinstance(iterable_or_scalar, abc.Iterable):
         if length and length is not len(iterable_or_scalar):
             raise ValueError(
@@ -109,6 +113,59 @@ def valid_sequence(sequence, length: int) -> bool:
             raise ValueError(f"Lentgh of {sequence} should be {length}.")
 
     return False
+
+
+class SequenceDict(UserDict):
+    """Convert each value to a `sequence` upon insertion.
+
+    A drop-in replacement class for `dict`s, that calls `sequence` on
+    values before they are inserted and stores the result.
+
+    """
+
+    def __setitem__(self, key, value):
+        self.data[key] = sequence(value)
+
+
+class Apply:
+    """Apply `converter` to values assigned to this attribute.
+
+    Whenever a `value` is assigned to an attribute that uses this
+    descriptor, what's actually stored is the result of
+    `converter(value)`, e.g.:
+
+    >>> class Inverter:
+    ...     inverted = Apply(lambda x: -x)
+    ...
+    >>> one = Inverter()
+    >>> one.inverted = 1
+    >>> one.inverted
+    -1
+
+    """
+
+    unset = object()
+
+    def __init__(self, converter, default=unset):
+        self.converter = converter
+        self.default = default
+
+        self.data = {}
+        self.name = None
+
+    def __get__(self, obj, objtype=None):
+        if (id(obj) not in self.data) and (self.default is self.unset):
+            raise AttributeError(
+                f"attribute '{self.name}' of '{objtype.__name__}'"
+                " object accessed before being assigned a value"
+            )
+        return self.data.get(id(obj), self.default)
+
+    def __set__(self, obj, value):
+        self.data[id(obj)] = self.converter(value)
+
+    def __set_name__(self, owner, name):
+        self.name = name
 
 
 class _FakeSequence:

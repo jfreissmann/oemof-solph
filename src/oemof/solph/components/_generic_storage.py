@@ -41,6 +41,7 @@ from pyomo.environ import Var
 
 from oemof.solph._helpers import check_node_object_for_missing_attribute
 from oemof.solph._options import Investment
+from oemof.solph._plumbing import Apply
 from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 from oemof.solph.flows import Flow
@@ -171,6 +172,19 @@ class GenericStorage(Node):
     ...     outflow_conversion_factor=0.8)
     """  # noqa: E501
 
+    fixed_costs = Apply(sequence)
+    fixed_losses_absolute = Apply(sequence)
+    fixed_losses_relative = Apply(sequence)
+    inflow_conversion_factor = Apply(sequence)
+    invest_relation_input_capacity = Apply(sequence)
+    invest_relation_input_output = Apply(sequence)
+    invest_relation_output_capacity = Apply(sequence)
+    loss_rate = Apply(sequence)
+    max_storage_level = Apply(sequence)
+    min_storage_level = Apply(sequence)
+    outflow_conversion_factor = Apply(sequence)
+    storage_costs = Apply(sequence)
+
     def __init__(
         self,
         label=None,
@@ -230,15 +244,10 @@ class GenericStorage(Node):
         self.nominal_storage_capacity = None
         self.investment = None
         self._invest_group = False
-        self.invest_relation_input_output = sequence(
-            invest_relation_input_output
-        )
-        self.invest_relation_input_capacity = sequence(
-            invest_relation_input_capacity
-        )
-        self.invest_relation_output_capacity = sequence(
-            invest_relation_output_capacity
-        )
+        self.invest_relation_input_output = invest_relation_input_output
+        self.invest_relation_input_capacity = invest_relation_input_capacity
+        self.invest_relation_output_capacity = invest_relation_output_capacity
+
         if nominal_capacity is not None:
             if isinstance(nominal_capacity, numbers.Real):
                 self.nominal_storage_capacity = nominal_capacity
@@ -253,15 +262,15 @@ class GenericStorage(Node):
 
         self.initial_storage_level = initial_storage_level
         self.balanced = balanced
-        self.loss_rate = sequence(loss_rate)
-        self.fixed_losses_relative = sequence(fixed_losses_relative)
-        self.fixed_losses_absolute = sequence(fixed_losses_absolute)
-        self.inflow_conversion_factor = sequence(inflow_conversion_factor)
-        self.outflow_conversion_factor = sequence(outflow_conversion_factor)
-        self.max_storage_level = sequence(max_storage_level)
-        self.min_storage_level = sequence(min_storage_level)
-        self.fixed_costs = sequence(fixed_costs)
-        self.storage_costs = sequence(storage_costs)
+        self.loss_rate = loss_rate
+        self.fixed_losses_relative = fixed_losses_relative
+        self.fixed_losses_absolute = fixed_losses_absolute
+        self.inflow_conversion_factor = inflow_conversion_factor
+        self.outflow_conversion_factor = outflow_conversion_factor
+        self.max_storage_level = max_storage_level
+        self.min_storage_level = min_storage_level
+        self.fixed_costs = fixed_costs
+        self.storage_costs = storage_costs
         self.lifetime_inflow = lifetime_inflow
         self.lifetime_outflow = lifetime_outflow
         self.constant_soc_until = constant_soc_until
@@ -590,9 +599,7 @@ class GenericStorageBlock(ScalarBlock):
 
         self.STORAGES_WITH_INVEST_FLOW_REL = Set(
             initialize=[
-                n
-                for n in group
-                if n.invest_relation_input_output is not None
+                n for n in group if n.invest_relation_input_output is not None
             ]
         )
 
@@ -1503,9 +1510,7 @@ class GenericInvestmentStorageBlock(ScalarBlock):
 
         self.INVEST_REL_IN_OUT = Set(
             initialize=[
-                n
-                for n in group
-                if n.invest_relation_input_output is not None
+                n for n in group if n.invest_relation_input_output is not None
             ]
         )
 

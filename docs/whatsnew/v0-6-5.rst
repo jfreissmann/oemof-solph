@@ -18,6 +18,9 @@ Bug fixes
 
 * Fix TSAM result disaggregation for ``NonConvex`` and ``InvestNonConvex``
   flows, which silently dropped per-timestep variables from the output.
+* Fix inconsistency in the assignment of sequences using scalar variables;
+  e.g. `flow = Flow(variable_costs=5)` worked, but `flow.variable_costs = 5`
+  failed when constructing the model.
 
 Other changes
 #############
@@ -33,7 +36,8 @@ Contributors
 
 * Jelmer de Wit
 * Patrik Schönfeldt
-
+* Pierre Francois Bachibouzouk
+* Stephan Günther
 
 Acknowledgements
 ################
