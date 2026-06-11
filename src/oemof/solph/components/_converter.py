@@ -123,9 +123,7 @@ class Converter(Node):
         if conversion_factors is None:
             conversion_factors = {}
 
-        self.conversion_factors = {
-            k: v for k, v in conversion_factors.items()
-        }
+        self.conversion_factors = {k: v for k, v in conversion_factors.items()}
 
         missing_conversion_factor_keys = (
             set(self.outputs) | set(self.inputs)

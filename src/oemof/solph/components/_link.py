@@ -111,9 +111,7 @@ class Link(Node):
             warn_if_missing_attribute(self, "conversion_factors")
             conversion_factors = {}
 
-        self.conversion_factors = {
-            k: v for k, v in conversion_factors.items()
-        }
+        self.conversion_factors = {k: v for k, v in conversion_factors.items()}
         msg = (
             "Component `Link` should have exactly "
             + "2 inputs, 2 outputs, and 2 "

@@ -224,9 +224,7 @@ class OffsetConverter(Node):
                 "flow."
             )
 
-        self.conversion_factors = {
-            k: v for k, v in conversion_factors.items()
-        }
+        self.conversion_factors = {k: v for k, v in conversion_factors.items()}
 
         missing_conversion_factor_keys = (
             set(self.outputs) | set(self.inputs)
@@ -243,9 +241,7 @@ class OffsetConverter(Node):
                 "Normed offsets cannot be specified for the `NonConvex` flow."
             )
 
-        self.normed_offsets = {
-            k: v for k, v in normed_offsets.items()
-        }
+        self.normed_offsets = {k: v for k, v in normed_offsets.items()}
 
         missing_normed_offsets_keys = (
             set(self.outputs) | set(self.inputs)

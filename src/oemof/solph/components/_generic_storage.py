@@ -599,9 +599,7 @@ class GenericStorageBlock(ScalarBlock):
 
         self.STORAGES_WITH_INVEST_FLOW_REL = Set(
             initialize=[
-                n
-                for n in group
-                if n.invest_relation_input_output is not None
+                n for n in group if n.invest_relation_input_output is not None
             ]
         )
 
@@ -1512,9 +1510,7 @@ class GenericInvestmentStorageBlock(ScalarBlock):
 
         self.INVEST_REL_IN_OUT = Set(
             initialize=[
-                n
-                for n in group
-                if n.invest_relation_input_output is not None
+                n for n in group if n.invest_relation_input_output is not None
             ]
         )
 
