@@ -67,11 +67,7 @@ def test_fake_sequence_compare():
     with pytest.raises(ValueError, match="The truth value of an array"):
         bool(seq_lt <= seq0)
     with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq0 <= seq0)
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq0 == seq0)
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq0 >= seq0)
+        bool(seq_lt == seq_gt)
     with pytest.raises(ValueError, match="The truth value of an array"):
         bool(seq_gt >= seq0)
     with pytest.raises(ValueError, match="The truth value of an array"):
@@ -148,6 +144,19 @@ def test_fake_sequence_compare():
     assert (other <= seq0).any()
     assert (other <= seq_gt).any()
     assert (other < seq_gt).any()
+
+    # For length=1, __bool__ works.
+    seq_lt.size = 1
+    seq0.size = 1
+    seq_gt.size = 1
+    other = _FakeSequence(42, length=1)
+    assert other > seq_lt
+    assert other >= seq_lt
+    assert other >= seq0
+    assert other == seq0
+    assert other <= seq0
+    assert other <= seq_gt
+    assert other < seq_gt
 
 
 def test_fake_sequence_addition():

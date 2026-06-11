@@ -205,10 +205,12 @@ class _FakeSequence:
         return bool(self.value)
 
     def __bool__(self):
-        raise ValueError(
-            "The truth value of an array with more than one element is "
-            " ambiguous. Use a.any() or a.all()"
-        )
+        if self.size != 1:
+            raise ValueError(
+                "The truth value of an array with more than one element is "
+                " ambiguous. Use a.any() or a.all()"
+            )
+        return bool(self.value)
 
     def __eq__(self, other):
         if isinstance(other, _FakeSequence):
