@@ -154,21 +154,23 @@ class Apply:
     def __init__(self, converter, default=unset):
         self.converter = converter
         self.default = default
+
+        self.data = {}
         self.name = None
 
     def __set_name__(self, owner, name):
         self.name = name
 
     def __get__(self, obj, objtype=None):
-        if (not hasattr(obj, f"_{self.name}")) and (self.default is self.unset):
+        if (id(obj) not in self.data) and (self.default is self.unset):
             raise AttributeError(
                 f"attribute '{self.name}' of '{objtype.__name__}'"
                 " object accessed before being assigned a value"
             )
-        return getattr(obj, f"_{self.name}", self.default)
+        return self.data.get(id(obj), self.default)
 
     def __set__(self, obj, value):
-        setattr(obj, f"_{self.name}", self.converter(value))
+        self.data[id(obj)] = self.converter(value)
 
 
 class _FakeSequence:
