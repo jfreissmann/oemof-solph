@@ -40,30 +40,54 @@ def test_fake_sequence():
         assert len(seq[1:2]) == 1
         assert len(seq[1:-1]) == 0
 
-        assert seq_lt < seq
-        assert seq_lt <= seq
-        assert seq0 <= seq
-        assert seq0 == seq
-        assert seq0 >= seq
-        assert seq_gt >= seq
-        assert seq_gt > seq
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq_lt < seq)
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq_lt <= seq)
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq0 <= seq)
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq0 == seq)
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq0 >= seq)
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq_gt >= seq)
+        with pytest.raises(ValueError, match="The truth value of an array"):
+            bool(seq_gt > seq)
 
-        for other in [42, [42, 42]]:
-            assert seq_lt < other
-            assert seq_lt <= other
-            assert seq0 <= other
-            assert seq0 == other
-            assert seq0 >= other
-            assert seq_gt >= other
-            assert seq_gt > other
+        for other in [42, [42, 42], np.array([42, 42])]:
+            assert (seq_lt < other).all()
+            assert (seq_lt <= other).all()
+            assert (seq0 <= other).all()
+            assert (seq0 == other).all()
+            assert (seq0 >= other).all()
+            assert (seq_gt >= other).all()
+            assert (seq_gt > other).all()
 
-            assert other > seq_lt
-            assert other >= seq_lt
-            assert other >= seq0
-            assert other == seq0
-            assert other <= seq0
-            assert other <= seq_gt
-            assert other < seq_gt
+            assert (seq_lt < other).any()
+            assert (seq_lt <= other).any()
+            assert (seq0 <= other).any()
+            assert (seq0 == other).any()
+            assert (seq0 >= other).any()
+            assert (seq_gt >= other).any()
+            assert (seq_gt > other).any()
+
+        for other in [[1, 42, 100], np.array([1, 42, 100])]:
+            assert not (seq_lt < other).all()
+            assert not (seq_lt <= other).all()
+            assert not (seq0 <= other).all()
+            assert not (seq0 == other).all()
+            assert not (seq0 >= other).all()
+            assert not (seq_gt >= other).all()
+            assert not (seq_gt > other).all()
+
+            assert (seq_lt < other).any()
+            assert (seq_lt <= other).any()
+            assert (seq0 <= other).any()
+            assert (seq0 == other).any()
+            assert (seq0 >= other).any()
+            assert (seq_gt >= other).any()
+            assert (seq_gt > other).any()
 
         assert str(seq) == "[42.0, 42.0, ..., 42.0]"
 
@@ -81,6 +105,44 @@ def test_fake_sequence():
         assert seq.min() == 42
         assert seq.value == 42
         assert seq.sum() == 84
+
+        for other in [42, [42, 42]]:
+            assert (other > seq_lt).all()
+            assert (other >= seq_lt).all()
+            assert (other >= seq0).all()
+            assert (other == seq0).all()
+            assert (other <= seq0).all()
+            assert (other <= seq_gt).all()
+            assert (other < seq_gt).all()
+
+            assert (other > seq_lt).any()
+            assert (other >= seq_lt).any()
+            assert (other >= seq0).any()
+            assert (other == seq0).any()
+            assert (other <= seq0).any()
+            assert (other <= seq_gt).any()
+            assert (other < seq_gt).any()
+
+        other = np.array([42, 42])
+        # comparision from numpy only works with set size
+        seq_lt.size = 2
+        seq_gt.size = 2
+        seq0.size = 2
+        assert (other > seq_lt).all()
+        assert (other >= seq_lt).all()
+        assert (other >= seq0).all()
+        assert (other == seq0).all()
+        assert (other <= seq0).all()
+        assert (other <= seq_gt).all()
+        assert (other < seq_gt).all()
+
+        assert (other > seq_lt).any()
+        assert (other >= seq_lt).any()
+        assert (other >= seq0).any()
+        assert (other == seq0).any()
+        assert (other <= seq0).any()
+        assert (other <= seq_gt).any()
+        assert (other < seq_gt).any()
 
         assert str(seq) == "[42.0, 42.0]"
 
