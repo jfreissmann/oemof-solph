@@ -37,6 +37,7 @@ Contributors
 * Jelmer de Wit
 * Patrik Schönfeldt
 * Pierre Francois Bachibouzouk
+* Stephan Günther
 
 Acknowledgements
 ################
