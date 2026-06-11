@@ -130,7 +130,7 @@ class Link(Node):
         ):
             warn(msg, debugging.SuspiciousUsageWarning)
 
-    conversion_factors = Apply(type_converter=SequenceDict)
+    conversion_factors = Apply(SequenceDict)
 
     def constraint_group(self):
         return LinkBlock

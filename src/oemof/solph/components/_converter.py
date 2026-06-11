@@ -134,7 +134,7 @@ class Converter(Node):
         for cf in missing_conversion_factor_keys:
             self.conversion_factors[cf] = 1
 
-    conversion_factors = Apply(type_converter=SequenceDict)
+    conversion_factors = Apply(SequenceDict)
 
     def constraint_group(self):
         return ConverterBlock

@@ -93,9 +93,7 @@ class ExtractionTurbineCHP(Converter):
             k: v for k, v in conversion_factor_full_condensation.items()
         }
 
-    conversion_factor_full_condensation = Apply(
-        type_converter=SequenceDict
-    )
+    conversion_factor_full_condensation = Apply(SequenceDict)
 
     def constraint_group(self):
         return ExtractionTurbineCHPBlock

@@ -42,6 +42,7 @@ from pyomo.environ import Var
 from oemof.solph._helpers import check_node_object_for_missing_attribute
 from oemof.solph._options import Investment
 from oemof.solph._plumbing import Apply
+from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 from oemof.solph.flows import Flow
 
@@ -276,18 +277,18 @@ class GenericStorage(Node):
             self.max_charge_capacity = flow.nominal_capacity
             self.relative_charge_limit = flow.maximum
 
-    invest_relation_input_output = Apply()
-    invest_relation_input_capacity = Apply()
-    invest_relation_output_capacity = Apply()
-    loss_rate = Apply()
-    fixed_losses_relative = Apply()
-    fixed_losses_absolute = Apply()
-    inflow_conversion_factor = Apply()
-    outflow_conversion_factor = Apply()
-    max_storage_level = Apply()
-    min_storage_level = Apply()
-    fixed_costs = Apply()
-    storage_costs = Apply()
+    invest_relation_input_output = Apply(sequence)
+    invest_relation_input_capacity = Apply(sequence)
+    invest_relation_output_capacity = Apply(sequence)
+    loss_rate = Apply(sequence)
+    fixed_losses_relative = Apply(sequence)
+    fixed_losses_absolute = Apply(sequence)
+    inflow_conversion_factor = Apply(sequence)
+    outflow_conversion_factor = Apply(sequence)
+    max_storage_level = Apply(sequence)
+    min_storage_level = Apply(sequence)
+    fixed_costs = Apply(sequence)
+    storage_costs = Apply(sequence)
 
     def _check_number_of_flows(self):
         """Ensure that there is only one inflow and outflow to the storage"""

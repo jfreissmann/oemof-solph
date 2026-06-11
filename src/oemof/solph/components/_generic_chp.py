@@ -28,6 +28,7 @@ from pyomo.environ import Set
 from pyomo.environ import Var
 
 from oemof.solph._plumbing import Apply
+from oemof.solph._plumbing import sequence
 
 
 class GenericCHP(Node):
@@ -151,7 +152,7 @@ class GenericCHP(Node):
         self.outputs.update(electrical_output)
         self.outputs.update(heat_output)
 
-    beta = Apply()
+    beta = Apply(sequence)
 
     def _calculate_alphas(self):
         """

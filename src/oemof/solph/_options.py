@@ -21,6 +21,7 @@ from warnings import warn
 from oemof.tools import debugging
 
 from oemof.solph._plumbing import Apply
+from oemof.solph._plumbing import sequence
 
 
 class Investment:
@@ -139,11 +140,11 @@ class Investment:
         self._check_invest_attributes_nonconvex()
         self._check_nonconvex()
 
-    maximum = Apply()
-    minimum = Apply()
-    ep_costs = Apply()
-    offset = Apply()
-    fixed_costs = Apply()
+    maximum = Apply(sequence)
+    minimum = Apply(sequence)
+    ep_costs = Apply(sequence)
+    offset = Apply(sequence)
+    fixed_costs = Apply(sequence)
 
     def _check_invest_attributes(self):
         """Throw an error if existing is other than 0 and nonconvex is True"""
@@ -309,11 +310,11 @@ class NonConvex:
         else:
             self.first_flexible_timestep = self.minimum_uptime[0]
 
-    minimum_uptime = Apply()
-    minimum_downtime = Apply()
-    startup_costs = Apply()
-    shutdown_costs = Apply()
-    activity_costs = Apply()
-    inactivity_costs = Apply()
-    negative_gradient_limit = Apply()
-    positive_gradient_limit = Apply()
+    minimum_uptime = Apply(sequence)
+    minimum_downtime = Apply(sequence)
+    startup_costs = Apply(sequence)
+    shutdown_costs = Apply(sequence)
+    activity_costs = Apply(sequence)
+    inactivity_costs = Apply(sequence)
+    negative_gradient_limit = Apply(sequence)
+    positive_gradient_limit = Apply(sequence)

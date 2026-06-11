@@ -254,8 +254,8 @@ class OffsetConverter(Node):
         for cf in missing_normed_offsets_keys:
             self.normed_offsets[cf] = 0
 
-    conversion_factors = Apply(type_converter=SequenceDict)
-    normed_offsets = Apply(type_converter=SequenceDict)
+    conversion_factors = Apply(SequenceDict)
+    normed_offsets = Apply(SequenceDict)
 
     def constraint_group(self):
         return OffsetConverterBlock

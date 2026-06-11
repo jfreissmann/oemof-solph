@@ -85,8 +85,8 @@ def test_sequence_dict():
 
 def test_Apply_descriptor():
     class TestClass:
-        x = Apply()
-        y = Apply("y")
+        x = Apply(sequence)
+        y = Apply(converter=sequence, default="y")
 
         def __init__(self, x):
             self.x = x
@@ -108,7 +108,7 @@ def test_Apply_descriptor():
 
 def test_using_Apply_to_convert_to_int():
     class TestClass:
-        x = Apply(type_converter=int)
+        x = Apply(converter=int)
 
         def __init__(self, x):
             self.x = x

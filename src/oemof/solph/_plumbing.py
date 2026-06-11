@@ -129,8 +129,8 @@ class SequenceDict(UserDict):
 class Apply:
     """Descriptor class for properties that should contain sequences
     """
-    def __init__(self, default=None, type_converter=sequence):
-        self.type_converter = type_converter
+    def __init__(self, converter, default=None):
+        self.converter = converter
         self.value = default
         self.name = None
 
@@ -141,7 +141,7 @@ class Apply:
         return getattr(obj, self.name, self.value)
 
     def __set__(self, obj, value):
-        setattr(obj, self.name, self.type_converter(value))
+        setattr(obj, self.name, self.converter(value))
 
 
 class _FakeSequence:

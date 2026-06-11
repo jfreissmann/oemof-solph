@@ -374,11 +374,11 @@ class Flow(Edge):
                 + "investment to be set."
             )
 
-    fixed_costs = Apply()
-    variable_costs = Apply()
-    positive_gradient_limit = Apply()
-    negative_gradient_limit = Apply()
+    fixed_costs = Apply(sequence)
+    variable_costs = Apply(sequence)
+    positive_gradient_limit = Apply(sequence)
+    negative_gradient_limit = Apply(sequence)
 
-    fix = Apply()
-    maximum = Apply()
-    minimum = Apply()
+    fix = Apply(sequence)
+    maximum = Apply(sequence)
+    minimum = Apply(sequence)
