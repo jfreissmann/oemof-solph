@@ -78,6 +78,27 @@ def test_fake_sequence():
     assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
 
 
+def test_fake_sequence_abs():
+    seq = _FakeSequence(-5)
+    seq5 = abs(seq)
+    assert seq5.value == 5
+    assert seq5.size == None
+
+    seq = _FakeSequence(-5, 4)
+    seq5 = abs(seq)
+    assert seq5.value == 5
+    assert seq5.size == 4
+
+    seq = _FakeSequence(5, 4)
+    seq5 = abs(seq)
+    assert seq5.value == 5
+    assert seq5.size == 4
+
+    seq = _FakeSequence(5, 4)
+    seq5 = abs(seq)
+    assert seq5.value == 5
+    assert seq5.size == 4
+
 def test_fake_sequence_compare():
     seq0 = _FakeSequence(42.0)
     seq_lt = _FakeSequence(7)

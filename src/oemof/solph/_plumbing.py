@@ -271,6 +271,9 @@ class _FakeSequence:
             )
         return bool(self.value)
 
+    def __abs__(self):
+        return _FakeSequence(abs(self.value), self.size)
+
     def __eq__(self, other):
         if isinstance(other, _FakeSequence):
             if self.size == other.size:
