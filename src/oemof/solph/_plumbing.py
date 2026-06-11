@@ -123,13 +123,8 @@ class SequenceDict(UserDict):
 
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for key, value in self.items():
-            self[key] = value
-
     def __setitem__(self, key, value):
-        super().__setitem__(key, sequence(value))
+        self.data[key] = sequence(value)
 
 
 class Apply:
