@@ -82,7 +82,7 @@ def test_fake_sequence_abs():
     seq = _FakeSequence(-5)
     seq5 = abs(seq)
     assert seq5.value == 5
-    assert seq5.size == None
+    assert seq5.size is None
 
     seq = _FakeSequence(-5, 4)
     seq5 = abs(seq)
@@ -98,6 +98,7 @@ def test_fake_sequence_abs():
     seq5 = abs(seq)
     assert seq5.value == 5
     assert seq5.size == 4
+
 
 def test_fake_sequence_compare():
     seq0 = _FakeSequence(42.0)
