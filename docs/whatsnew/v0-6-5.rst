@@ -21,6 +21,9 @@ Bug fixes
 * Fix inconsistency in the assignment of sequences using scalar variables;
   e.g. `flow = Flow(variable_costs=5)` worked, but `flow.variable_costs = 5`
   failed when constructing the model.
+* Name the TSA-disaggregated storage SOC result ``storage_content`` to match
+  non-clustered ``GenericStorage`` results, so result readers (e.g. ``views``)
+  find it by the same key regardless of clustering.
 
 Other changes
 #############
