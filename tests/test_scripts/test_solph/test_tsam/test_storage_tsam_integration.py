@@ -211,7 +211,8 @@ def test_soc():
 
 
 def test_storage_soc_uses_storage_content_name():
-    # clustered runs used to label SOC "soc", but "storage_content" is the canonical name and should stay consistent
+    # clustered runs used to label SOC "soc", but "storage_content" is the
+    # canonical name and should stay consistent
     all_columns = [
         col
         for entry in results.values()
