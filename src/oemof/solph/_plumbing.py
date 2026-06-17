@@ -53,8 +53,11 @@ def sequence(iterable_or_scalar, length=None):
     if iterable_or_scalar is None:
         return None
     if isinstance(iterable_or_scalar, _FakeSequence):
-        iterable_or_scalar.size = length
-        return iterable_or_scalar
+        if length is not None:
+            return np.full(shape=length, fill_value=iterable_or_scalar.value)
+        else:
+            return iterable_or_scalar
+
     if len(np.shape(iterable_or_scalar)) > 1:
         d = len(np.shape(iterable_or_scalar))
         raise ValueError(
@@ -75,27 +78,13 @@ def sequence(iterable_or_scalar, length=None):
             else:
                 return np.array(iterable_or_scalar)
     else:
-        return _FakeSequence(value=iterable_or_scalar, length=length)
+        return _FakeSequence(value=iterable_or_scalar)
 
 
 def valid_sequence(sequence, length: int) -> bool:
-    """Checks if an object is a numpy array of at least the given length
-    or an 'emulated' sequence object of class _FakeSequence.
-    If unset, the latter is set to the required lenght.
-
     """
-    if sequence is None:
-        return False
-
-    if isinstance(sequence, _FakeSequence):
-        if sequence.size is None:
-            sequence.size = length
-
-        if sequence.size == length:
-            return True
-        else:
-            return False
-
+    Checks if an object is a numpy array of at least the given length
+    """
     if isinstance(sequence, np.ndarray):
         if sequence.size == length:
             return True
@@ -188,74 +177,26 @@ class _FakeSequence:
     42
     """
 
-    def __init__(self, value, length=None):
+    def __init__(self, value):
         self._value = value
-        self._length = length
-
-    @property
-    def size(self):
-        return self._length
-
-    @size.setter
-    def size(self, value):
-        self._length = value
 
     def __getitem__(self, i):
         if isinstance(i, slice):
-            start = 0
-            stop = -1
-            step = 1
-            if i.start:
-                start = i.start
-            if i.stop:
-                stop = i.stop
-            if i.step:
-                step = i.step
-            if self.size and stop < 0:
-                stop = self.size + stop
-            length = (stop - start) // step
-            if length <= 0:
-                length = None
-            return _FakeSequence(self._value, length=length)
+            return sequence(self._value)
         else:
             return self._value
 
     def __repr__(self):
-        if self._length is not None:
-            return str([i for i in self])
-        else:
-            return f"[{self._value}, {self._value}, ..., {self._value}]"
+        return f"[{self._value}, {self._value}, ..., {self._value}]"
 
-    def __len__(self):
-        if self._length is not None:
-            return self._length
-        else:
-            return 0
-
-    def __iter__(self):
-        return repeat(self._value, self._length)
+    def __float__(self):
+        return self._value
 
     def max(self):
         return self._value
 
     def min(self):
         return self._value
-
-    def sum(self):
-        if self._length is None:
-            return np.inf
-        else:
-            return self._length * self._value
-
-    def to_numpy(self, length=None):
-        if length is not None:
-            return np.full(length, self._value)
-        elif self._length is not None:
-            return np.full(self._length, self._value)
-        else:
-            raise ValueError(
-                "Length needs to be defined for casting to numpy."
-            )
 
     def all(self):
         return bool(self.value)
@@ -264,104 +205,36 @@ class _FakeSequence:
         return bool(self.value)
 
     def __bool__(self):
-        if self.size != 1:
-            raise ValueError(
-                "The truth value of an array with more than one element is "
-                " ambiguous. Use a.any() or a.all()"
-            )
         return bool(self.value)
 
     def __abs__(self):
-        return _FakeSequence(abs(self.value), self.size)
+        return _FakeSequence(abs(self.value))
 
     def __eq__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value == other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value == np.array(other)
-        else:
-            return _FakeSequence(self.value == other, length=self.size)
+        return sequence(self.value == other)
 
     def __lt__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value < other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value < np.array(other)
-        else:
-            return _FakeSequence(self.value < other, length=self.size)
+        return sequence(self.value < other)
 
     def __le__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value <= other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value <= np.array(other)
-        else:
-            return _FakeSequence(self.value <= other, length=self.size)
+        return sequence(self.value <= other)
 
     def __gt__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value > other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value > np.array(other)
-        else:
-            return _FakeSequence(self.value > other, length=self.size)
+        return sequence(self.value > other)
 
     def __ge__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value >= other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value >= np.array(other)
-        else:
-            return _FakeSequence(self.value >= other, length=self.size)
+        return sequence(self.value >= other)
 
     def __add__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value + other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value + np.array(other)
-        else:
-            return _FakeSequence(self.value + other, length=self.size)
+        return sequence(self.value + other)
 
     __radd__ = __add__
 
     def __sub__(self, other):
-        if isinstance(other, _FakeSequence):
-            if self.size == other.size:
-                length = self.size
-            else:
-                length = None
-            return _FakeSequence(self.value - other.value, length=length)
-        elif isinstance(other, abc.Iterable):
-            return self.value - np.array(other)
-        else:
-            return _FakeSequence(self.value - other, length=self.size)
+        return sequence(self.value - other)
 
     def __mul__(self, other):
-        return sequence(self._value * other, length=self._length)
+        return sequence(self._value * other)
 
     __rmul__ = __mul__
 
