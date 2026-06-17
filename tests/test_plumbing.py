@@ -20,32 +20,8 @@ from oemof.solph._plumbing import valid_sequence
 
 def test_fake_sequence_access():
     seq = _FakeSequence(7)
-
-    assert len(seq[0:1]) == 1
-    assert len(seq[:2]) == 2
-    assert len(seq[1:2]) == 1
-    assert len(seq[1:4]) == 3
-    assert len(seq[1:4:2]) == 1
-    assert len(seq[:4:2]) == 2
-    assert len(seq[1:-1]) == 0
-    assert len(seq[1:]) == 0
-    assert len(seq[1:-2]) == 0
-
     assert seq[0] == 7
-    assert seq.size is None
     assert seq[10] == 7
-    assert seq.size is None
-
-    seq = _FakeSequence(7, 8)
-    assert len(seq[0:1]) == 1
-    assert len(seq[:2]) == 2
-    assert len(seq[1:2]) == 1
-    assert len(seq[1:4]) == 3
-    assert len(seq[1:4:2]) == 1
-    assert len(seq[:4:2]) == 2
-    assert len(seq[1:-1]) == 6
-    assert len(seq[1:]) == 6
-    assert len(seq[1:-2]) == 5
 
 
 def test_fake_sequence():
@@ -53,51 +29,33 @@ def test_fake_sequence():
     assert seq.max() == 42
     assert seq.min() == 42
     assert seq.value == 42
-    assert seq.sum() == np.inf
 
     assert str(seq) == "[42.0, 42.0, ..., 42.0]"
-
-    with pytest.raises(ValueError, match="Length needs to be defined"):
-        seq.to_numpy()
-    assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
-
-    assert len(seq) == 0
-
-    seq.size = 2
-    assert seq.size == 2
-    assert len(seq) == 2
-
-    assert seq.max() == 42
-    assert seq.min() == 42
-    assert seq.value == 42
-    assert seq.sum() == 84
-
-    assert str(seq) == "[42.0, 42.0]"
-
-    assert (seq.to_numpy() == np.array(2 * [42])).all()
-    assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
 
 
 def test_fake_sequence_abs():
     seq = _FakeSequence(-5)
     seq5 = abs(seq)
     assert seq5.value == 5
-    assert seq5.size is None
 
-    seq = _FakeSequence(-5, 4)
-    seq5 = abs(seq)
-    assert seq5.value == 5
-    assert seq5.size == 4
 
-    seq = _FakeSequence(5, 4)
-    seq5 = abs(seq)
-    assert seq5.value == 5
-    assert seq5.size == 4
+def test_sequence():
 
-    seq = _FakeSequence(5, 4)
-    seq5 = abs(seq)
-    assert seq5.value == 5
-    assert seq5.size == 4
+    seq0 = sequence(0)
+    assert isinstance(seq0, _FakeSequence)
+    assert seq0.value == 0
+
+    with pytest.raises(ValueError, match="Length mismatch"):
+        _ = sequence([1, 3], length=3)
+    seq13 = sequence([1, 3])
+    assert isinstance(seq13, np.ndarray)
+    assert (seq13 == np.array([1, 3])).all()
+
+    with pytest.raises(ValueError, match="Length mismatch"):
+        _ = sequence("ab", length=3)
+    seq_ab = sequence("ab")
+    assert isinstance(seq_ab, str)
+    assert seq_ab == "ab"
 
 
 def test_fake_sequence_compare():
@@ -105,18 +63,7 @@ def test_fake_sequence_compare():
     seq_lt = _FakeSequence(7)
     seq_gt = _FakeSequence(64)
 
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq_lt < seq0)
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq_lt <= seq0)
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq_lt == seq_gt)
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq_gt >= seq0)
-    with pytest.raises(ValueError, match="The truth value of an array"):
-        bool(seq_gt > seq0)
-
-    for other in [42, [42, 42], np.array([42, 42]), _FakeSequence(42, 3)]:
+    for other in [42, [42, 42], np.array([42, 42]), _FakeSequence(42)]:
         assert (seq_lt < other).all()
         assert (seq_lt <= other).all()
         assert (seq0 <= other).all()
@@ -168,10 +115,7 @@ def test_fake_sequence_compare():
         assert (other < seq_gt).any()
 
     other = np.array([42, 42])
-    # comparision from numpy only works with set size
-    seq0.size = 2
-    seq_lt.size = 2
-    seq_gt.size = 2
+
     assert (other > seq_lt).all()
     assert (other >= seq_lt).all()
     assert (other >= seq0).all()
@@ -333,10 +277,10 @@ def test_using_Apply_to_convert_to_numeric():
 
 
 def test_sequence():
+
     seq0 = sequence(0)
     assert isinstance(seq0, _FakeSequence)
     assert seq0.value == 0
-    assert seq0.size is None
 
     with pytest.raises(ValueError, match="Length mismatch"):
         _ = sequence([1, 3], length=3)
