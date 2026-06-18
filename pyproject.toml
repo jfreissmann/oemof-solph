@@ -85,6 +85,7 @@ Changelog = "https://oemof-solph.readthedocs.io/en/latest/changelog.html"
 dev = [
     "flit",
     "furo",
+    "highspy",
     "matplotlib",
     "nbformat",
     "openpyxl",
