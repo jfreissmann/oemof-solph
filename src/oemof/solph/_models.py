@@ -444,24 +444,53 @@ class Model(po.ConcreteModel):
         solve_kwargs=None,
         cmdline_options=None,
     ):
-        msg = (
-            "Using the 'HiGHS'-solver is experimental in solph.\n Using "
-            "options and accessing the meta results might be different."
-        )
-        warnings.warn(msg)
+        if solve_kwargs is None:
+            solve_kwargs = {}
+        if cmdline_options is None:
+            cmdline_options = {}
+
         opt = appsi.solvers.Highs()
-        results = opt.solve(self)
-        if results.termination_condition.value == 5:
+        opt.config.load_solution = False
+
+        if solve_kwargs.get("tee"):
+            opt.config.stream_solver = True
+
+        opt.highs_options = cmdline_options
+
+        appsi_results = opt.solve(self)
+        tc = appsi_results.termination_condition
+
+        solver_results_dict = {
+            "termination_condition": tc.name,
+            "best_feasible_objective": appsi_results.best_feasible_objective,
+            "best_objective_bound": appsi_results.best_objective_bound,
+        }
+        self.es.results = solver_results_dict
+        self.solver_results = solver_results_dict
+
+        if tc == appsi.base.TerminationCondition.optimal:
+            appsi_results.solution_loader.load_vars()
+            if self.dual is not None:
+                for c, val in appsi_results.solution_loader.get_duals().items():
+                    self.dual[c] = val
+            if self.rc is not None:
+                for v, val in appsi_results.solution_loader.get_reduced_costs().items():
+                    self.rc[v] = val
             logging.info(
-                f"Optimization successful with condition: "
-                f"{results.termination_condition.name}"
+                f"Optimization successful with condition: {tc.name}"
             )
+            return Results(self)
         else:
-            warnings.warn("Optimization ended with an unclear status ")
-            print(results)
-        self.solver_results = results
-        # results = Results(self)  # ToDo: This does not work!!
-        return results
+            msg = (
+                f"The solver did not return an optimal solution. "
+                f"Instead the optimization ended with\n"
+                f"       - termination condition: {tc.name}"
+            )
+            if allow_nonoptimal:
+                warnings.warn(msg, UserWarning)
+                return solver_results_dict
+            else:
+                raise RuntimeError(msg)
 
     def solve(
         self,
