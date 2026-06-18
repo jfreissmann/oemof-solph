@@ -85,6 +85,7 @@ authors:
     given-names: Jonas
     family-names: Freißmann
     alias: "@jfreissmann"
+    orcid: "https://orcid.org/0009-0007-6432-5479"
   -
     given-names: Jonathan
     family-names: Amme
@@ -102,6 +103,7 @@ authors:
     given-names: Malte
     family-names: Fritz
     alias: "@maltefritz"
+    orcid: "https://orcid.org/0009-0001-5843-0973"
   -
     given-names: Marie-Claire
     family-names: Gering
