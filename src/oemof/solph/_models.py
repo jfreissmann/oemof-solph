@@ -21,6 +21,7 @@ from logging import getLogger
 
 from oemof.tools import debugging
 from pyomo import environ as po
+from pyomo.contrib import appsi
 from pyomo.core.plugins.transform.relax_integrality import RelaxIntegrality
 from pyomo.opt import SolverFactory
 
@@ -436,6 +437,32 @@ class Model(po.ConcreteModel):
         )
         return processing.results(self)
 
+    def solve_highs(
+        self,
+        solver_io="lp",
+        allow_nonoptimal=False,
+        solve_kwargs=None,
+        cmdline_options=None,
+    ):
+        msg = (
+            "Using the 'HiGHS'-solver is experimental in solph.\n Using "
+            "options and accessing the meta results might be different."
+        )
+        warnings.warn(msg)
+        opt = appsi.solvers.Highs()
+        results = opt.solve(self)
+        if results.termination_condition.value == 5:
+            logging.info(
+                f"Optimization successful with condition: "
+                f"{results.termination_condition.name}"
+            )
+        else:
+            warnings.warn("Optimization ended with an unclear status ")
+            print(results)
+        self.solver_results = results
+        # results = Results(self)  # ToDo: This does not work!!
+        return results
+
     def solve(
         self,
         solver="cbc",
@@ -471,10 +498,19 @@ class Model(po.ConcreteModel):
             solve_kwargs = {}
         if cmdline_options is None:
             cmdline_options = {}
+        if solver == "highs":
+            return self.solve_highs(
+                solver_io=solver_io,
+                allow_nonoptimal=allow_nonoptimal,
+                solve_kwargs=solve_kwargs,
+                cmdline_options=cmdline_options,
+            )
+
         if "appsi" in solver:
             solver_io = {}
         else:
             solver_io = {"solver_io": solver_io}
+
         opt = SolverFactory(solver, **solver_io)
 
         # set command line options
