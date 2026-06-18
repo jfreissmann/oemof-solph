@@ -233,13 +233,16 @@ class _FakeSequence:
     def __sub__(self, other):
         return sequence(self.value - other)
 
+    def __rsub__(self, other):
+        return sequence(other - self.value)
+
     def __mul__(self, other):
-        return sequence(self._value * other)
+        return sequence(self.value * other)
 
     __rmul__ = __mul__
 
     def __truediv__(self, other):
-        return 1 / other * self
+        return 1 / other * self.value
 
     @property
     def value(self):
