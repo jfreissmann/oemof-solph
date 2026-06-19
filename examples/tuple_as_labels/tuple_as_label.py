@@ -324,7 +324,7 @@ def main(optimize=True, solver="cbc"):
     )
 
     # Store the table to csv or excel file:
-    my_flows.to_csv(os.path.join(home_path, "my_flows.csv"))
+    # my_flows.to_csv(os.path.join(home_path, "my_flows.csv"))
     # my_flows.to_excel(os.path.join(home_path, "my_flows.xlsx"))
     print(my_flows.sum())
 
