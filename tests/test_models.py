@@ -80,6 +80,34 @@ def _make_feasible_es():
     return es
 
 
+def _make_mip_es():
+    """Same as feasible LP but with a NonConvex flow → MIP."""
+    es = solph.EnergySystem(timeindex=[0, 1, 2], infer_last_interval=False)
+    bus = solph.buses.Bus(label="bus")
+    es.add(bus)
+    es.add(
+        solph.components.Source(
+            label="source",
+            outputs={
+                bus: solph.flows.Flow(
+                    variable_costs=10,
+                    nominal_capacity=100,
+                    nonconvex=solph.NonConvex(),
+                )
+            },
+        )
+    )
+    es.add(
+        solph.components.Sink(
+            label="sink",
+            inputs={
+                bus: solph.flows.Flow(fix=[0.5, 0.8, 0.3], nominal_capacity=100)
+            },
+        )
+    )
+    return es
+
+
 # ---------------------------------------------------------------------------
 # Parametrized: CBC and HiGHS must behave identically
 # ---------------------------------------------------------------------------
@@ -169,6 +197,39 @@ def test_highs_duals_match_cbc():
     assert highs_duals.keys() == cbc_duals.keys()
     for key in highs_duals:
         assert highs_duals[key] == pytest.approx(cbc_duals[key], abs=1e-6)
+
+
+def test_highs_reduced_costs_match_cbc():
+    """Reduced costs match CBC for variables both solvers report.
+
+    HiGHS omits RC for fixed-bound variables while CBC includes them,
+    so we only assert equality on the intersection.
+    """
+    es = _make_feasible_es()
+
+    m_highs = solph.Model(es)
+    m_highs.receive_duals()
+    m_highs.solve(solver="highs")
+
+    m_cbc = solph.Model(es)
+    m_cbc.receive_duals()
+    m_cbc.solve(solver="cbc")
+
+    highs_rc = {str(v): val for v, val in m_highs.rc.items()}
+    cbc_rc = {str(v): val for v, val in m_cbc.rc.items()}
+
+    common_keys = highs_rc.keys() & cbc_rc.keys()
+    assert len(common_keys) > 0, "No common RC variables to compare"
+    for key in common_keys:
+        assert highs_rc[key] == pytest.approx(cbc_rc[key], abs=1e-6)
+
+
+@pytest.mark.parametrize("solver", ["cbc", "highs"])
+def test_receive_duals_on_mip_does_not_crash(solver):
+    """receive_duals() followed by solve must not crash for MIP models."""
+    m = solph.Model(_make_mip_es())
+    m.receive_duals()
+    m.solve(solver=solver)
 
 
 # ---------------------------------------------------------------------------
