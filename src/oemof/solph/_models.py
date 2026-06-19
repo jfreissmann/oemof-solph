@@ -467,24 +467,6 @@ class Model(po.ConcreteModel):
         except RuntimeError:
             pass
 
-        if self.dual is not None:
-            try:
-                for (
-                    c,
-                    val,
-                ) in appsi_results.solution_loader.get_duals().items():
-                    self.dual[c] = val
-            except RuntimeError:
-                pass  # duals not available for MIP models
-        if self.rc is not None:
-            try:
-                for (
-                    v,
-                    val,
-                ) in appsi_results.solution_loader.get_reduced_costs().items():
-                    self.rc[v] = val
-            except RuntimeError:
-                pass  # reduced costs not available for MIP models
         return solver_info(
             optimal=optimal,
             termination_condition=condition,
