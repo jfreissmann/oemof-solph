@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT
 
 import logging
 import warnings
+from collections import namedtuple
 from logging import getLogger
 
 from oemof.tools import debugging
@@ -438,17 +439,8 @@ class Model(po.ConcreteModel):
         return processing.results(self)
 
     def solve_highs(
-        self,
-        solver_io="lp",
-        allow_nonoptimal=False,
-        solve_kwargs=None,
-        cmdline_options=None,
+        self, solver_info, cmdline_options=None, solve_kwargs=None
     ):
-        if solve_kwargs is None:
-            solve_kwargs = {}
-        if cmdline_options is None:
-            cmdline_options = {}
-
         opt = appsi.solvers.Highs()
         opt.config.load_solution = False
 
@@ -460,43 +452,67 @@ class Model(po.ConcreteModel):
         appsi_results = opt.solve(self)
         tc = appsi_results.termination_condition
 
-        solver_results_dict = {
+        solver_results = {
             "termination_condition": tc.name,
             "best_feasible_objective": appsi_results.best_feasible_objective,
             "best_objective_bound": appsi_results.best_objective_bound,
+            "wallclock_time": appsi_results.wallclock_time,
         }
-        self.es.results = solver_results_dict
-        self.solver_results = solver_results_dict
 
-        if tc == appsi.base.TerminationCondition.optimal:
+        optimal = tc == appsi.base.TerminationCondition.optimal
+        condition = tc.name
+        status = tc.value
+        try:
             appsi_results.solution_loader.load_vars()
-            if self.dual is not None:
-                try:
-                    for c, val in appsi_results.solution_loader.get_duals().items():
-                        self.dual[c] = val
-                except RuntimeError:
-                    pass  # duals not available for MIP models
-            if self.rc is not None:
-                try:
-                    for v, val in appsi_results.solution_loader.get_reduced_costs().items():
-                        self.rc[v] = val
-                except RuntimeError:
-                    pass  # reduced costs not available for MIP models
-            logging.info(
-                f"Optimization successful with condition: {tc.name}"
-            )
-            return Results(self)
-        else:
-            msg = (
-                f"The solver did not return an optimal solution. "
-                f"Instead the optimization ended with\n"
-                f"       - termination condition: {tc.name}"
-            )
-            if allow_nonoptimal:
-                warnings.warn(msg, UserWarning)
-                return solver_results_dict
-            else:
-                raise RuntimeError(msg)
+        except RuntimeError:
+            pass
+
+        if self.dual is not None:
+            try:
+                for (
+                    c,
+                    val,
+                ) in appsi_results.solution_loader.get_duals().items():
+                    self.dual[c] = val
+            except RuntimeError:
+                pass  # duals not available for MIP models
+        if self.rc is not None:
+            try:
+                for (
+                    v,
+                    val,
+                ) in appsi_results.solution_loader.get_reduced_costs().items():
+                    self.rc[v] = val
+            except RuntimeError:
+                pass  # reduced costs not available for MIP models
+        return solver_info(
+            optimal=optimal,
+            termination_condition=condition,
+            status=status,
+            solver_results=solver_results,
+        )
+
+    def solve_factory(
+        self, solver_info, solver, solver_io, solve_kwargs, cmdline_options
+    ):
+        opt = SolverFactory(solver, solver_io=solver_io)
+
+        # set command line options
+        options = opt.options
+        for k in cmdline_options:
+            options[k] = cmdline_options[k]
+
+        factory_results = opt.solve(self, **solve_kwargs)
+
+        status = factory_results.Solver.Status
+        message = factory_results.Solver.Termination_condition
+
+        return solver_info(
+            optimal=status == "ok" and message == "optimal",
+            termination_condition=message,
+            status=factory_results.Solver.Status,
+            solver_results=factory_results,
+        )
 
     def solve(
         self,
@@ -533,49 +549,46 @@ class Model(po.ConcreteModel):
             solve_kwargs = {}
         if cmdline_options is None:
             cmdline_options = {}
+        solver_info = namedtuple(
+            "SolverReturn",
+            ["optimal", "solver_results", "termination_condition", "status"],
+        )
         if solver == "highs":
-            return self.solve_highs(
+            solver_return = self.solve_highs(
+                solver_info=solver_info,
+                solve_kwargs=solve_kwargs,
+                cmdline_options=cmdline_options,
+            )
+        else:
+            solver_return = self.solve_factory(
+                solver_info=solver_info,
+                solver=solver,
                 solver_io=solver_io,
-                allow_nonoptimal=allow_nonoptimal,
                 solve_kwargs=solve_kwargs,
                 cmdline_options=cmdline_options,
             )
 
-        if "appsi" in solver:
-            solver_io = {}
-        else:
-            solver_io = {"solver_io": solver_io}
+        self.es.results = solver_return.solver_results
+        self.solver_results = solver_return.solver_results
 
-        opt = SolverFactory(solver, **solver_io)
-
-        # set command line options
-        options = opt.options
-        for k in cmdline_options:
-            options[k] = cmdline_options[k]
-
-        solver_results = opt.solve(self, **solve_kwargs)
-
-        status = solver_results.Solver.Status
-        termination_condition = solver_results.Solver.Termination_condition
-
-        self.es.results = solver_results
-        self.solver_results = solver_results
-
-        if status == "ok" and termination_condition == "optimal":
-            logging.info("Optimization successful...")
+        if solver_return.optimal:
+            msg = "Optimization successful..."
+            logging.info(msg)
         else:
             msg = (
                 f"The solver did not return an optimal solution. "
                 f"Instead the optimization ended with\n"
-                f"       - status: {status}\n"
-                f"       - termination condition: {termination_condition}"
+                f"       - status: {solver_return.status}\n"
+                f"       - termination condition: "
+                f"{solver_return.termination_condition}"
             )
 
             if allow_nonoptimal:
                 warnings.warn(
-                    msg.format(status, termination_condition), UserWarning
+                    msg.format(solver_return.status, solver_return.message),
+                    UserWarning,
                 )
-                return solver_results
+                return solver_return.solver_results
             else:
                 raise RuntimeError(msg)
 
