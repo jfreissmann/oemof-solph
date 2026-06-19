@@ -18,7 +18,6 @@ from pyomo.opt.results import SolverResults
 from oemof import solph
 from oemof.solph._results import Results
 
-
 # ---------------------------------------------------------------------------
 # Shared energy-system factories
 # ---------------------------------------------------------------------------
@@ -36,7 +35,9 @@ def _make_infeasible_es():
     )
     es.add(
         solph.components.Source(
-            outputs={bus: solph.flows.Flow(nominal_capacity=4, variable_costs=5)}
+            outputs={
+                bus: solph.flows.Flow(nominal_capacity=4, variable_costs=5)
+            }
         )
     )
     return es
@@ -73,7 +74,9 @@ def _make_feasible_es():
         solph.components.Sink(
             label="sink",
             inputs={
-                bus: solph.flows.Flow(fix=[0.5, 0.8, 0.3], nominal_capacity=100)
+                bus: solph.flows.Flow(
+                    fix=[0.5, 0.8, 0.3], nominal_capacity=100
+                )
             },
         )
     )
@@ -101,7 +104,9 @@ def _make_mip_es():
         solph.components.Sink(
             label="sink",
             inputs={
-                bus: solph.flows.Flow(fix=[0.5, 0.8, 0.3], nominal_capacity=100)
+                bus: solph.flows.Flow(
+                    fix=[0.5, 0.8, 0.3], nominal_capacity=100
+                )
             },
         )
     )
@@ -140,7 +145,9 @@ def test_infeasible_cbc_returns_solver_results():
 
 @pytest.mark.parametrize("solver", ["cbc", "highs"])
 def test_infeasible_raises_by_default(solver):
-    """allow_nonoptimal=False (default) must raise RuntimeError for any solver."""
+    """
+    allow_nonoptimal=False (default) must raise RuntimeError for any solver.
+    """
     m = solph.Model(_make_infeasible_es())
     with pytest.raises(
         RuntimeError, match="The solver did not return an optimal solution"
