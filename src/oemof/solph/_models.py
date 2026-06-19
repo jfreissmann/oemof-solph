@@ -462,7 +462,7 @@ class Model(po.ConcreteModel):
         optimal = tc == appsi.base.TerminationCondition.optimal
         condition = tc.name
         status = tc.value
-        
+
         appsi_results.solution_loader.load_vars()
 
         return solver_info(
