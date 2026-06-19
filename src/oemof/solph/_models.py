@@ -471,11 +471,17 @@ class Model(po.ConcreteModel):
         if tc == appsi.base.TerminationCondition.optimal:
             appsi_results.solution_loader.load_vars()
             if self.dual is not None:
-                for c, val in appsi_results.solution_loader.get_duals().items():
-                    self.dual[c] = val
+                try:
+                    for c, val in appsi_results.solution_loader.get_duals().items():
+                        self.dual[c] = val
+                except RuntimeError:
+                    pass  # duals not available for MIP models
             if self.rc is not None:
-                for v, val in appsi_results.solution_loader.get_reduced_costs().items():
-                    self.rc[v] = val
+                try:
+                    for v, val in appsi_results.solution_loader.get_reduced_costs().items():
+                        self.rc[v] = val
+                except RuntimeError:
+                    pass  # reduced costs not available for MIP models
             logging.info(
                 f"Optimization successful with condition: {tc.name}"
             )
