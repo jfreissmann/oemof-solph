@@ -462,10 +462,8 @@ class Model(po.ConcreteModel):
         optimal = tc == appsi.base.TerminationCondition.optimal
         condition = tc.name
         status = tc.value
-        try:
-            appsi_results.solution_loader.load_vars()
-        except RuntimeError:
-            pass
+        
+        appsi_results.solution_loader.load_vars()
 
         return solver_info(
             optimal=optimal,
