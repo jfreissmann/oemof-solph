@@ -165,6 +165,7 @@ def test_fake_sequence_multiplication():
     seq_rmul = _FakeSequence(2.0) * 21
 
     seq_div = _FakeSequence(84.0) / 2
+    seq_rdiv = 2 / _FakeSequence(84.0)
     seq_imul = _FakeSequence(21.0)
     seq_imul *= 2
     seq_idiv = _FakeSequence(84)
@@ -267,18 +268,11 @@ def test_valid_sequence():
     with pytest.raises(ValueError):
         valid_sequence(np_array, 1337)
 
-    # fake_sequence = _FakeSequence(42)
-    # assert valid_sequence(fake_sequence, 5)
-    # assert len(fake_sequence) == 5
+    assert not valid_sequence(None, 3)
 
-    # # wil not automatically overwrite size
-    # assert not valid_sequence(fake_sequence, 1337)
-    # assert len(fake_sequence) == 5
-
-    # # manually overwriting length is still possible
-    # fake_sequence.size = 1337
-    # assert valid_sequence(fake_sequence, 1337)
-    # assert len(fake_sequence) == 1337
+    fake_seq = _FakeSequence(42)
+    assert valid_sequence(fake_seq, 3)
+    assert valid_sequence(fake_seq, 1337)
 
     # strings are no valid sequences
-    assert not valid_sequence("abc", 3)
+    assert not valid_sequence("abc", 2)
