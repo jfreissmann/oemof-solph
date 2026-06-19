@@ -20,8 +20,6 @@ SPDX-License-Identifier: MIT
 
 """
 
-from warnings import warn
-
 from oemof.network import Node
 from pyomo.core import BuildAction
 from pyomo.core.base.block import ScalarBlock
@@ -30,8 +28,7 @@ from pyomo.environ import Set
 
 from oemof.solph._plumbing import Apply
 from oemof.solph._plumbing import SequenceDict
-from oemof.solph._plumbing import sequence
-from oemof.solph._plumbing import valid_sequence
+
 
 class OffsetConverter(Node):
     r"""An object with one or more inputs and one or more outputs to allow
