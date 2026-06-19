@@ -165,6 +165,7 @@ def test_fake_sequence_multiplication():
     seq_rmul = _FakeSequence(2.0) * 21
 
     seq_div = _FakeSequence(84.0) / 2
+    seq_rdiv = 2 / _FakeSequence(84.0)
     seq_imul = _FakeSequence(21.0)
     seq_imul *= 2
     seq_idiv = _FakeSequence(84)
