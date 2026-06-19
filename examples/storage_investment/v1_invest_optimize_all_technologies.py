@@ -89,7 +89,7 @@ from oemof.tools import logger
 from oemof import solph
 
 
-def main(optimize=True):
+def main(optimize=True, solver="cbc"):
     # Read data file
     filename = os.path.join(
         os.path.dirname(__file__), "storage_investment.csv"

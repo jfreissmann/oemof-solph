@@ -47,7 +47,7 @@ from oemof import solph
 from oemof.tools import logger
 
 
-def main(optimize=True):
+def main(optimize=True, solver="cbc"):
     solver = "highs"  # 'glpk', 'gurobi',...
     solver_verbose = False  # show/hide solver output
 

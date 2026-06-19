@@ -132,7 +132,7 @@ class Label(namedtuple("solph_label", ["tag1", "tag2", "tag3"])):
         return "_".join(map(str, self._asdict().values()))
 
 
-def main(optimize=True):
+def main(optimize=True, solver="cbc"):
     # Read data file
     home_path = os.path.dirname(__file__)
     filename = os.path.join(home_path, "tuple_as_label.csv")

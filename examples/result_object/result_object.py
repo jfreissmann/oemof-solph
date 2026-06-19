@@ -101,7 +101,7 @@ def plot_figures_for(element: dict) -> None:
     plt.show()
 
 
-def main(optimize=True):
+def main(optimize=True, solver="cbc"):
 
     # *************************************************************************
     # ********** PART 1 - Define and optimise the energy system ***************

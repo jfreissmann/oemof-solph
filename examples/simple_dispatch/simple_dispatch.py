@@ -57,7 +57,7 @@ from oemof.solph.components import Sink
 from oemof.solph.components import Source
 
 
-def main(optimize=True):
+def main(optimize=True, solver="cbc"):
     # Read data file
     filename = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "input_data.csv"
