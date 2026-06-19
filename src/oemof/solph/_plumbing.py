@@ -173,11 +173,10 @@ class _FakeSequence:
 
     Examples
     --------
-    >>> s = _FakeSequence(value=42, length=5)
-    >>> s
-    [42, 42, 42, 42, 42]
     >>> s = _FakeSequence(value=42)
-    >>> # undefined lenght, access still works
+    >>> s
+    [42, 42, ..., 42]
+    >>> # undefined lenght, access always works
     >>> s[1337]
     42
     """

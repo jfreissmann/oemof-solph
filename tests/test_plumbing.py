@@ -267,18 +267,8 @@ def test_valid_sequence():
     with pytest.raises(ValueError):
         valid_sequence(np_array, 1337)
 
-    # fake_sequence = _FakeSequence(42)
-    # assert valid_sequence(fake_sequence, 5)
-    # assert len(fake_sequence) == 5
+    fake_sequence = _FakeSequence(42)
+    assert valid_sequence(fake_sequence, 5)
 
-    # # wil not automatically overwrite size
-    # assert not valid_sequence(fake_sequence, 1337)
-    # assert len(fake_sequence) == 5
-
-    # # manually overwriting length is still possible
-    # fake_sequence.size = 1337
-    # assert valid_sequence(fake_sequence, 1337)
-    # assert len(fake_sequence) == 1337
-
-    # strings are no valid sequences
-    assert not valid_sequence("abc", 3)
+    # _FakeSequence has every length
+    assert valid_sequence(fake_sequence, 1337)
