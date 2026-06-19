@@ -72,3 +72,5 @@ docs/_build
 # Mypy Cache
 .mypy_cache/
 /es_dump.oemof
+*.lp
+/examples/tuple_as_labels/my_flows.csv
