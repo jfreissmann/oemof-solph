@@ -83,13 +83,20 @@ def sequence(iterable_or_scalar, length=None):
 
 def valid_sequence(sequence, length: int) -> bool:
     """
-    Checks if an object is a numpy array of at least the given length
+    Checks if an object has the given length
+
+    This is needed as we have `_FakeSequence` which is assumed to have every
+    possible length, thus `__len__` is not defined for it.
     """
-    if isinstance(sequence, np.ndarray):
-        if sequence.size == length:
+    if sequence is None:
+        return False
+    elif isinstance(sequence, _FakeSequence):
+        return True  # a _FakeSequence has every length
+    else:
+        if len(sequence) == length:
             return True
         # --- BEGIN: To be removed for versions >= v0.6 ---
-        elif sequence.size > length:
+        elif len(sequence) > length:
             warnings.warn(
                 "Sequence longer than needed"
                 f" ({sequence.size} items instead of {length})."
@@ -100,8 +107,6 @@ def valid_sequence(sequence, length: int) -> bool:
         # --- END ---
         else:
             raise ValueError(f"Lentgh of {sequence} should be {length}.")
-
-    return False
 
 
 class SequenceDict(UserDict):
