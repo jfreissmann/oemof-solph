@@ -247,7 +247,10 @@ class _FakeSequence:
     __rmul__ = __mul__
 
     def __truediv__(self, other):
-        return 1 / other * self.value
+        return sequence(self.value / other)
+
+    def __rtruediv__(self, other):
+        return sequence(other / self.value)
 
     @property
     def value(self):
