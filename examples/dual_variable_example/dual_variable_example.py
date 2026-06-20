@@ -53,7 +53,6 @@ def main(optimize=True, solver="cbc"):
     # ********** PART 1 - Define and optimise the energy system ***************
     # *************************************************************************
 
-    solver = "cbc"  # 'glpk', 'gurobi',....
     number_of_time_steps = 48
     solver_verbose = False  # show/hide solver output
 

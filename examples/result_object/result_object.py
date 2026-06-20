@@ -111,7 +111,6 @@ def main(optimize=True, solver="cbc"):
     file_name = "time_series.csv"
     data = get_data_from_file_path(file_name)
 
-    solver = "cbc"  # 'glpk', 'gurobi',....
     number_of_time_steps = len(data)
     solver_verbose = False  # show/hide solver output
 

@@ -143,7 +143,6 @@ def main(optimize=True, solver="cbc"):
         warnings.warn(msg.format(filename), UserWarning)
         data = pd.DataFrame({"pv": [0.3], "wind": [0.6], "demand_el": [500]})
 
-    solver = "cbc"  # 'glpk', 'gurobi',....
     debug = False  # Set number_of_timesteps to 3 to get a readable lp-file.
     number_of_time_steps = len(data)
     solver_verbose = False  # show/hide solver output

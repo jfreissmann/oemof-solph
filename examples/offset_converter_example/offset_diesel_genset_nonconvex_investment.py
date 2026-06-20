@@ -294,14 +294,17 @@ def main(optimize=True, solver="cbc"):
 
     # The higher the MipGap or ratioGap, the faster the solver would converge,
     # but the less accurate the results would be.
-    solver_option = {"gurobi": {"MipGap": "0.02"}, "cbc": {"ratioGap": "0.02"}}
-    solver = "cbc"
+    solver_option = {
+        "gurobi": {"MipGap": "0.02"},
+        "cbc": {"ratioGap": "0.02"},
+        "highs": {"mip_rel_gap": 0.02},
+    }
 
     model = solph.Model(energy_system)
     model.solve(
         solver=solver,
         solve_kwargs={"tee": True},
-        cmdline_options=solver_option[solver],
+        cmdline_options=solver_option.get(solver, None),
     )
 
     # End of the calculation time.
