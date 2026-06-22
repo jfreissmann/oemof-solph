@@ -19,9 +19,9 @@ import numpy as np
 
 
 def sequence(iterable_or_scalar, length=None):
-    """Checks if an object is iterable (except string) or scalar and returns
-    the an numpy array of the sequence if object is an iterable or an
-    'emulated'  sequence object of class _FakeSequence if object is a scalar.
+    """Checks if an object is iterable or scalar and returns a numpy array
+    of the sequence if object is an iterable or a _FakeSequence
+    the length cannot be infered.
 
     Parameters
     ----------
@@ -72,10 +72,7 @@ def sequence(iterable_or_scalar, length=None):
                 + " from input {iterable_or_scalar}."
             )
         else:
-            if isinstance(iterable_or_scalar, str):
-                return iterable_or_scalar
-            else:
-                return np.array(iterable_or_scalar)
+            return np.array(iterable_or_scalar)
     else:
         return _FakeSequence(value=iterable_or_scalar)
 

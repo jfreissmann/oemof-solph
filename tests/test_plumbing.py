@@ -53,9 +53,9 @@ def test_sequence():
 
     with pytest.raises(ValueError, match="Length mismatch"):
         _ = sequence("ab", length=3)
-    seq_ab = sequence("ab")
-    assert isinstance(seq_ab, str)
-    assert seq_ab == "ab"
+    seq_ab = sequence("this_is_a_string")
+    assert isinstance(seq_ab, np.ndarray)
+    assert seq_ab == "this_is_a_string"
 
 
 def test_fake_sequence_slice():
