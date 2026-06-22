@@ -61,9 +61,32 @@ def test_sequence():
 def test_fake_sequence_slice():
     seq = _FakeSequence(42)
     sliced = seq[2:5]
-    # Slicing returns another _FakeSequence
-    assert isinstance(sliced, _FakeSequence)
-    assert sliced.value == 42
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 3
+
+    sliced = seq[2:5:2]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 1
+
+    sliced = seq[2:6:2]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 2
+
+    sliced = seq[:5]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 5
+
+    sliced = seq[-8:-5]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 3
+
+    with pytest.raises(ValueError, match="_FakeSequence has every length."):
+        sliced = seq[1:-5]
 
 
 def test_fake_sequence_float():

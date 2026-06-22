@@ -185,7 +185,17 @@ class _FakeSequence:
 
     def __getitem__(self, i):
         if isinstance(i, slice):
-            return sequence(self._value)
+            start = (i.start if i.start is not None else 0)
+            step = (i.step if i.step is not None else 1)
+            stop = (i.stop if i.stop is not None else -1)
+            if start < stop:
+                length = (stop - start) // step
+                return np.full(length, self._value)
+            else:
+                raise ValueError(
+                    "_FakeSequence has every length. Thus, slicing only works"
+                    + " if it allows infering the target length."
+                )
         else:
             return self._value
 
