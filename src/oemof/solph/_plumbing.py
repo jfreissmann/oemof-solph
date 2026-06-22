@@ -192,7 +192,7 @@ class _FakeSequence:
                 length = (stop - start) // step
                 return np.full(length, self._value)
             else:
-                raise ValueError(
+                raise IndexError(
                     "_FakeSequence has every length. Thus, slicing only works"
                     + " if it allows infering the target length."
                 )

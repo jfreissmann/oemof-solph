@@ -85,8 +85,8 @@ def test_fake_sequence_slice():
     assert sliced[0] == 42
     assert len(sliced) == 3
 
-    with pytest.raises(ValueError, match="_FakeSequence has every length."):
-        sliced = seq[1:-5]
+    with pytest.raises(IndexError, match="_FakeSequence has every length."):
+        _ = seq[1:-5]
 
 
 def test_fake_sequence_float():
