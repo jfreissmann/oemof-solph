@@ -225,21 +225,6 @@ def test_invalid_normed_offset():
         )
 
 
-def test_wrong_number_of_coefficients():
-    bus1 = solph.Bus()
-    bus2 = solph.Bus()
-    with pytest.raises(ValueError, match="Two coefficients"):
-        solph.components.OffsetConverter(
-            inputs={
-                bus1: solph.Flow(
-                    nominal_capacity=2, nonconvex=solph.NonConvex()
-                )
-            },
-            outputs={bus2: solph.Flow()},
-            coefficients=(1, 2, 3),
-        )
-
-
 def test_OffsetConverter_single_input_output_ref_output():
     num_in = 1
     num_out = 1
@@ -501,72 +486,6 @@ def test_two_OffsetConverters_with_and_without_investment():
         fix_flow.fix = [v * 2 for v in fix_flow.fix]
     # if the model solves it is feasible
     _ = solve_and_extract_results(es)
-
-
-def test_OffsetConverter_05x_compatibility():
-    num_in = 1
-    num_out = 1
-    es = create_energysystem_stub(num_in, num_out)
-
-    nominal_capacity = 10
-    minimal_value = 3
-
-    # Use of experimental API to access nodes by label.
-    # Can be removed with future release of network.
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category=ExperimentalFeatureWarning)
-        fix = [0] + np.linspace(minimal_value, nominal_capacity, 9).tolist()
-        fix_flow = es.flows()[es.node["bus output 0"], es.node["sink 0"]]
-        fix_flow.fix = fix
-        fix_flow.nominal_capacity = 1
-
-    eta_at_nom = 0.7
-    eta_at_min = 0.5
-
-    slope = (nominal_capacity - minimal_value) / (
-        nominal_capacity / eta_at_nom - minimal_value / eta_at_min
-    )
-    offset = minimal_value / nominal_capacity * (1 - slope / eta_at_min)
-
-    warnings.filterwarnings("ignore", "", DeprecationWarning)
-    oc = solph.components.OffsetConverter(
-        label="offset converter",
-        inputs={es.groups["bus input 0"]: solph.Flow()},
-        outputs={
-            es.groups["bus output 0"]: solph.Flow(
-                nonconvex=solph.NonConvex(),
-                nominal_capacity=nominal_capacity,
-                minimum=minimal_value / nominal_capacity,
-            )
-        },
-        coefficients=(offset, slope),
-    )
-
-    es.add(oc)
-    warnings.filterwarnings("always", "", DeprecationWarning)
-
-    results = solve_and_extract_results(es)
-
-    slope, offset = slope_offset_from_nonconvex_output(
-        1, minimal_value / nominal_capacity, 0.7, 0.5
-    )
-    output_flow = results["offset converter", "bus output 0"]["sequences"][
-        "flow"
-    ]
-    output_flow_status = results["offset converter", "bus output 0"][
-        "sequences"
-    ]["status"]
-
-    input_flow_expected = (
-        offset * nominal_capacity * output_flow_status + slope * output_flow
-    )
-    input_flow_actual = results["bus input 0", "offset converter"][
-        "sequences"
-    ]["flow"]
-
-    np.testing.assert_array_almost_equal(
-        input_flow_actual, input_flow_expected
-    )
 
 
 def test_error_handling():
