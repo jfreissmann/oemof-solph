@@ -662,7 +662,7 @@ def _calculate_soc_from_inter_and_intra_soc(soc, storage, tsa_parameters):
 
     soc_ts["timestep"] = range(len(soc_ts))
     interpolated_soc = soc_ts.interpolate()
-    interpolated_soc["variable_name"] = "soc"
+    interpolated_soc["variable_name"] = "storage_content"
 
     return interpolated_soc.iloc[:-1]
 

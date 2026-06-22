@@ -83,6 +83,7 @@ Changelog = "https://oemof-solph.readthedocs.io/en/latest/changelog.html"
 
 [project.optional-dependencies]
 dev = [
+    "cffconvert",
     "flit",
     "furo",
     "matplotlib",
@@ -97,6 +98,7 @@ dev = [
     "tox",
     "tsam>=3.0",
     "workalendar",
+    "pyyaml",
 ]
 
 [project.scripts]
