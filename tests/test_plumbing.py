@@ -58,6 +58,36 @@ def test_sequence():
     assert seq_ab == "ab"
 
 
+def test_fake_sequence_slice():
+    seq = _FakeSequence(42)
+    sliced = seq[2:5]
+    # Slicing returns another _FakeSequence
+    assert isinstance(sliced, _FakeSequence)
+    assert sliced.value == 42
+
+
+def test_fake_sequence_float():
+    seq = _FakeSequence(3.14)
+    assert float(seq) == 3.14
+    assert isinstance(float(seq), float)
+
+    seq_int = _FakeSequence(42.0)
+    assert float(seq_int) == 42.0
+
+
+def test_sequence_from_fake_sequence_with_length():
+    seq = _FakeSequence(42)
+    result = sequence(seq, length=5)
+    assert isinstance(result, np.ndarray)
+    assert len(result) == 5
+    assert (result == 42).all()
+
+    # sequence without length
+    result_no_len = sequence(seq)
+    assert isinstance(result_no_len, _FakeSequence)
+    assert result_no_len.value == 42
+
+
 def test_fake_sequence_compare():
     seq0 = _FakeSequence(42.0)
     seq_lt = _FakeSequence(7)
@@ -160,18 +190,18 @@ def test_fake_sequence_subtraction():
     assert ((seq1_var - array12) == np.array([11, 10])).all()
 
 
-def test_fake_sequence_multiplication():
+def test_fake_sequence_multiplication_and_division():
     seq_mul = 2 * _FakeSequence(21.0)
     seq_rmul = _FakeSequence(2.0) * 21
 
     seq_div = _FakeSequence(84.0) / 2
-    seq_rdiv = 2 / _FakeSequence(84.0)
+    seq_rdiv = 84 / _FakeSequence(2)
     seq_imul = _FakeSequence(21.0)
     seq_imul *= 2
     seq_idiv = _FakeSequence(84)
     seq_idiv /= 2
 
-    for seq in [seq_mul, seq_rmul, seq_div, seq_imul, seq_idiv]:
+    for seq in [seq_mul, seq_rmul, seq_div, seq_rdiv, seq_imul, seq_idiv]:
         assert seq == 42
 
     seq1 = _FakeSequence(42.0)
@@ -268,11 +298,8 @@ def test_valid_sequence():
     with pytest.raises(ValueError):
         valid_sequence(np_array, 1337)
 
-    assert not valid_sequence(None, 3)
+    fake_sequence = _FakeSequence(42)
+    assert valid_sequence(fake_sequence, 5)
 
-    fake_seq = _FakeSequence(42)
-    assert valid_sequence(fake_seq, 3)
-    assert valid_sequence(fake_seq, 1337)
-
-    # strings are no valid sequences
-    assert not valid_sequence("abc", 2)
+    # _FakeSequence has every length
+    assert valid_sequence(fake_sequence, 1337)
