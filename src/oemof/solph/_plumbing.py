@@ -19,9 +19,12 @@ import numpy as np
 
 
 def sequence(iterable_or_scalar, length=None):
-    """Checks if an object is iterable or scalar and returns a numpy array
-    of the sequence if object is an iterable or a _FakeSequence
-    the length cannot be infered.
+    """Casts iterable_or_scalar to an object that allows element access.
+
+    Technically, it checks if an object is iterable or scalar and returns a
+    numpy array if the object is an iterable or the length is given, or a
+    _FakeSequence if the length cannot be infered.
+    This way, we can (possibly) define a sequence of unknown length if needed.
 
     Parameters
     ----------
