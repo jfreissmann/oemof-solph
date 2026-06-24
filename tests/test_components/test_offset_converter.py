@@ -511,36 +511,36 @@ def test_error_handling():
         )
         warnings.filterwarnings("always", "", DeprecationWarning)
 
-        with pytest.raises(
-            ValueError, match="Conversion factors cannot be specified for"
-        ):
-            _ = solph.components.OffsetConverter(
-                label="offset converter",
-                inputs={input_bus: solph.Flow()},
-                outputs={
-                    output_bus: solph.Flow(
-                        nonconvex=solph.NonConvex(),
-                        nominal_capacity=10,
-                        minimum=0.3,
-                    )
-                },
-                conversion_factors={input_bus: 1, output_bus: 1},
-                normed_offsets={input_bus: 0},
-            )
+    with pytest.raises(
+        ValueError, match="Conversion factors cannot be specified for"
+    ):
+        _ = solph.components.OffsetConverter(
+            label="offset converter",
+            inputs={input_bus: solph.Flow()},
+            outputs={
+                output_bus: solph.Flow(
+                    nonconvex=solph.NonConvex(),
+                    nominal_capacity=10,
+                    minimum=0.3,
+                )
+            },
+            conversion_factors={input_bus: 1, output_bus: 1},
+            normed_offsets={input_bus: 0},
+        )
 
-        with pytest.raises(
-            ValueError, match="Normed offsets cannot be specified for"
-        ):
-            _ = solph.components.OffsetConverter(
-                label="offset converter",
-                inputs={input_bus: solph.Flow()},
-                outputs={
-                    output_bus: solph.Flow(
-                        nonconvex=solph.NonConvex(),
-                        nominal_capacity=10,
-                        minimum=0.3,
-                    )
-                },
-                conversion_factors={input_bus: 1},
-                normed_offsets={input_bus: 0, output_bus: 0},
-            )
+    with pytest.raises(
+        ValueError, match="Normed offsets cannot be specified for"
+    ):
+        _ = solph.components.OffsetConverter(
+            label="offset converter",
+            inputs={input_bus: solph.Flow()},
+            outputs={
+                output_bus: solph.Flow(
+                    nonconvex=solph.NonConvex(),
+                    nominal_capacity=10,
+                    minimum=0.3,
+                )
+            },
+            conversion_factors={input_bus: 1},
+            normed_offsets={input_bus: 0, output_bus: 0},
+        )
