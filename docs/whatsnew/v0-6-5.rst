@@ -4,6 +4,9 @@ v0.6.5
 API changes
 ###########
 
+* Removed the wrapper that still allowed initialising the `OffsetConverter`
+  using a tuple named `coefficient`. (This breaks compatibliity with solph
+  API before v0.5.3 from June 25th, 2024.)
 
 New features
 ############
@@ -30,8 +33,9 @@ Other changes
 
 * Interenally, sequences of 'None' are now avoided and a simple 'None'
   is used instead. We expect no effect for end users.
-* _FakeSequences with no defined length will now evaluate to have
-  ``len(fake_sequence) == 0``, as len is defined to return integers only.
+* _FakeSequences can no longer have a defined lentgh. It has "every length"
+  by convention. Thus, it can now be relyably cast; not to an array but to
+  a scalar float.
 * Updated respective examples ant tutorials to use current TSAM API (v3).
 
 Contributors
@@ -41,6 +45,7 @@ Contributors
 * Patrik Schönfeldt
 * Pierre Francois Bachibouzouk
 * Stephan Günther
+* Diana Maldonado Castro
 
 Acknowledgements
 ################

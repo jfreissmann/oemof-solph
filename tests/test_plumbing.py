@@ -18,48 +18,221 @@ from oemof.solph._plumbing import sequence
 from oemof.solph._plumbing import valid_sequence
 
 
+def test_fake_sequence_access():
+    seq = _FakeSequence(7)
+    assert seq[0] == 7
+    assert seq[10] == 7
+
+
 def test_fake_sequence():
+    seq = _FakeSequence(42.0)
+    assert seq.max() == 42
+    assert seq.min() == 42
+    assert seq.value == 42
+
+    assert str(seq) == "[42.0, 42.0, ..., 42.0]"
+
+
+def test_fake_sequence_abs():
+    seq = _FakeSequence(-5)
+    seq5 = abs(seq)
+    assert seq5.value == 5
+
+
+def test_sequence():
+    seq0 = sequence(0)
+    assert isinstance(seq0, _FakeSequence)
+    assert seq0.value == 0
+    sequence(None) is None
+
+    with pytest.raises(ValueError, match="Length mismatch"):
+        _ = sequence([1, 3], length=3)
+    seq13 = sequence([1, 3])
+    assert isinstance(seq13, np.ndarray)
+    assert (seq13 == np.array([1, 3])).all()
+
+    with pytest.raises(ValueError, match="Length mismatch"):
+        _ = sequence("ab", length=3)
+    seq_ab = sequence("this_is_a_string")
+    assert isinstance(seq_ab, np.ndarray)
+    assert seq_ab == "this_is_a_string"
+
+
+def test_fake_sequence_slice():
+    seq = _FakeSequence(42)
+    sliced = seq[2:5]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 3
+
+    sliced = seq[2:5:2]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 1
+
+    sliced = seq[2:6:2]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 2
+
+    sliced = seq[:5]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 5
+
+    sliced = seq[-8:-5]
+    assert isinstance(sliced, np.ndarray)
+    assert sliced[0] == 42
+    assert len(sliced) == 3
+
+    with pytest.raises(IndexError, match="_FakeSequence has every length."):
+        _ = seq[1:-5]
+
+
+def test_fake_sequence_float():
+    seq = _FakeSequence(3.14)
+    assert float(seq) == 3.14
+    assert isinstance(float(seq), float)
+
+    seq_int = _FakeSequence(42.0)
+    assert float(seq_int) == 42.0
+
+
+def test_sequence_from_fake_sequence_with_length():
+    seq = _FakeSequence(42)
+    result = sequence(seq, length=5)
+    assert isinstance(result, np.ndarray)
+    assert len(result) == 5
+    assert (result == 42).all()
+
+    # sequence without length
+    result_no_len = sequence(seq)
+    assert isinstance(result_no_len, _FakeSequence)
+    assert result_no_len.value == 42
+
+
+def test_fake_sequence_compare():
     seq0 = _FakeSequence(42.0)
+    seq_lt = _FakeSequence(7)
+    seq_gt = _FakeSequence(64)
+
+    for other in [42, np.array([42, 42]), _FakeSequence(42)]:
+        assert (seq_lt < other).all()
+        assert (seq_lt <= other).all()
+        assert (seq0 <= other).all()
+        assert (seq0 == other).all()
+        assert (seq0 >= other).all()
+        assert (seq_gt >= other).all()
+        assert (seq_gt > other).all()
+
+        assert (seq_lt < other).any()
+        assert (seq_lt <= other).any()
+        assert (seq0 <= other).any()
+        assert (seq0 == other).any()
+        assert (seq0 >= other).any()
+        assert (seq_gt >= other).any()
+        assert (seq_gt > other).any()
+
+        assert (other > seq_lt).all()
+        assert (other >= seq_lt).all()
+        assert (other >= seq0).all()
+        assert (other == seq0).all()
+        assert (other <= seq0).all()
+        assert (other <= seq_gt).all()
+        assert (other < seq_gt).all()
+
+        assert (other > seq_lt).any()
+        assert (other >= seq_lt).any()
+        assert (other >= seq0).any()
+        assert (other == seq0).any()
+        assert (other <= seq0).any()
+        assert (other <= seq_gt).any()
+        assert (other < seq_gt).any()
+
+    for other in [np.array([1, 42, 100])]:
+        assert not (seq_lt < other).all()
+        assert not (seq_lt <= other).all()
+        assert not (seq0 <= other).all()
+        assert not (seq0 == other).all()
+        assert not (seq0 >= other).all()
+        assert not (seq_gt >= other).all()
+        assert not (seq_gt > other).all()
+
+        assert (seq_lt < other).any()
+        assert (seq_lt <= other).any()
+        assert (seq0 <= other).any()
+        assert (seq0 == other).any()
+        assert (seq0 >= other).any()
+        assert (seq_gt >= other).any()
+        assert (seq_gt > other).any()
+
+    other = _FakeSequence(42)
+    assert other > seq_lt
+    assert other >= seq_lt
+    assert other >= seq0
+    assert other == seq0
+    assert other <= seq0
+    assert other <= seq_gt
+    assert other < seq_gt
+
+
+def test_fake_sequence_addition():
+    n1 = 12
+    seq1_var = _FakeSequence(12)
+
+    n2 = 8
+    seq2_var = _FakeSequence(8)
+
+    for s1 in [n1, seq1_var]:
+        for s2 in [n2, seq2_var]:
+            if isinstance(s1, _FakeSequence) or isinstance(s2, _FakeSequence):
+                added = s1 + s2
+                assert isinstance(added, _FakeSequence)
+                assert added.value == 20
+
+    array12 = np.array([1, 2])
+    assert ((array12 + seq1_var) == np.array([13, 14])).all()
+    assert ((seq1_var + array12) == np.array([13, 14])).all()
+
+
+def test_fake_sequence_subtraction():
+    n1 = 12
+    seq1_var = _FakeSequence(12)
+
+    n2 = 8
+    seq2_var = _FakeSequence(8)
+
+    for s1 in [n1, seq1_var]:
+        for s2 in [n2, seq2_var]:
+            if isinstance(s1, _FakeSequence) or isinstance(s2, _FakeSequence):
+                difference = s1 - s2
+                assert isinstance(difference, _FakeSequence)
+                assert difference.value == 4
+
+    array12 = np.array([1, 2])
+    assert ((seq1_var - array12) == np.array([11, 10])).all()
+
+
+def test_fake_sequence_multiplication_and_division():
     seq_mul = 2 * _FakeSequence(21.0)
     seq_rmul = _FakeSequence(2.0) * 21
+
     seq_div = _FakeSequence(84.0) / 2
+    seq_rdiv = 84 / _FakeSequence(2)
+    seq_imul = _FakeSequence(21.0)
+    seq_imul *= 2
+    seq_idiv = _FakeSequence(84)
+    seq_idiv /= 2
 
-    for seq in [seq0, seq_mul, seq_rmul, seq_div]:
-        assert seq[0] == 42
-        assert seq.size is None
+    for seq in [seq_mul, seq_rmul, seq_div, seq_rdiv, seq_imul, seq_idiv]:
+        assert seq == 42
 
-        assert seq[10] == 42
-        assert seq.size is None
+    seq1 = _FakeSequence(42.0)
+    seq2 = seq1 * np.array([1, 2])
+    assert (seq2 == np.array([42, 84])).all()
 
-        assert seq.max() == 42
-        assert seq.min() == 42
-        assert seq.value == 42
-        assert seq.sum() == np.inf
-
-        assert str(seq) == "[42.0, 42.0, ..., 42.0]"
-
-        with pytest.raises(ValueError, match="Length needs to be defined"):
-            seq.to_numpy()
-        assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
-
-        assert len(seq) == 0
-
-        seq.size = 2
-        assert seq.size == 2
-        assert len(seq) == 2
-
-        assert seq.max() == 42
-        assert seq.min() == 42
-        assert seq.value == 42
-        assert seq.sum() == 84
-
-        assert str(seq) == "[42.0, 42.0]"
-
-        assert (seq.to_numpy() == np.array(2 * [42])).all()
-        assert (seq.to_numpy(length=5) == np.array(5 * [42])).all()
-
-        seq2 = np.array([2, 2]) * seq
-        assert (seq2 == np.array(2 * [84])).all()
+    seq3 = np.array([1, 2]) * seq1
+    assert (seq3 == np.array([42, 84])).all()
 
 
 def test_sequence_dict():
@@ -128,25 +301,6 @@ def test_using_Apply_to_convert_to_numeric():
     assert i2.f == 2
 
 
-def test_sequence():
-    seq0 = sequence(0)
-    assert isinstance(seq0, _FakeSequence)
-    assert seq0.value == 0
-    assert seq0.size is None
-
-    with pytest.raises(ValueError, match="Length mismatch"):
-        _ = sequence([1, 3], length=3)
-    seq13 = sequence([1, 3])
-    assert isinstance(seq13, np.ndarray)
-    assert (seq13 == np.array([1, 3])).all()
-
-    with pytest.raises(ValueError, match="Length mismatch"):
-        _ = sequence("ab", length=3)
-    seq_ab = sequence("ab")
-    assert isinstance(seq_ab, str)
-    assert seq_ab == "ab"
-
-
 def test_dimension_is_too_high_to_create_a_sequence():
     df = pd.DataFrame({"epc": 5}, index=["a"])
     with pytest.raises(ValueError, match="Dimension too high"):
@@ -169,16 +323,6 @@ def test_valid_sequence():
 
     fake_sequence = _FakeSequence(42)
     assert valid_sequence(fake_sequence, 5)
-    assert len(fake_sequence) == 5
 
-    # wil not automatically overwrite size
-    assert not valid_sequence(fake_sequence, 1337)
-    assert len(fake_sequence) == 5
-
-    # manually overwriting length is still possible
-    fake_sequence.size = 1337
+    # _FakeSequence has every length
     assert valid_sequence(fake_sequence, 1337)
-    assert len(fake_sequence) == 1337
-
-    # strings are no valid sequences
-    assert not valid_sequence("abc", 3)
