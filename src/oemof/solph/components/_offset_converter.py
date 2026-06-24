@@ -145,7 +145,6 @@ class OffsetConverter(Node):
         label=None,
         conversion_factors=None,
         normed_offsets=None,
-        coefficients=None,
         custom_properties=None,
     ):
         if custom_properties is None:
@@ -158,28 +157,6 @@ class OffsetConverter(Node):
             label=label,
             custom_properties=custom_properties,
         )
-
-        # --- BEGIN: To be removed for versions >= v0.7 ---
-        # this part is used for the transition phase from the old
-        # OffsetConverter API to the new one. It calcualtes the
-        # conversion_factors and normed_offsets from the coefficients and the
-        # outputs information on min and max.
-        if coefficients is not None:
-            if conversion_factors is not None or normed_offsets is not None:
-                msg = (
-                    "The deprecated argument `coefficients` cannot be used "
-                    "in combination with its replacements "
-                    "(`conversion_factors` and `normed_offsets`)."
-                )
-                raise TypeError(msg)
-
-            (
-                normed_offsets,
-                conversion_factors,
-            ) = self.normed_offset_and_conversion_factors_from_coefficients(
-                coefficients
-            )
-        # --- END ---
 
         _reference_flow = [v for v in self.inputs.values() if v.nonconvex]
         _reference_flow += [v for v in self.outputs.values() if v.nonconvex]

@@ -492,25 +492,6 @@ def test_error_handling():
     input_bus = solph.Bus("bus1")
     output_bus = solph.Bus("bus2")
 
-    with pytest.raises(TypeError, match="cannot be used in combination"):
-        warnings.filterwarnings("ignore", "", DeprecationWarning)
-        _ = solph.components.OffsetConverter(
-            label="offset converter",
-            inputs={input_bus: solph.Flow()},
-            outputs={
-                output_bus: solph.Flow(
-                    nonconvex=solph.NonConvex(),
-                    nominal_capacity=10,
-                    minimum=0.3,
-                )
-            },
-            # values are arbitarty just to test the error
-            coefficients=(-1, 0.4),
-            conversion_factors={input_bus: 1},
-            normed_offsets={input_bus: 0},
-        )
-        warnings.filterwarnings("always", "", DeprecationWarning)
-
     with pytest.raises(
         ValueError, match="Conversion factors cannot be specified for"
     ):
