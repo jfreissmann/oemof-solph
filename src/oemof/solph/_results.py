@@ -12,6 +12,7 @@ SPDX-License-Identifier: MIT
 
 import warnings
 from collections.abc import Hashable
+from typing import Any
 
 import pandas as pd
 from oemof.tools.debugging import ExperimentalFeatureWarning
@@ -100,8 +101,8 @@ class Results:
     def get(
         self,
         key: str,
-        default: any = None,
-    ) -> pd.DataFrame | pd.Series:
+        default: Any = None,
+    ) -> pd.DataFrame | pd.Series | None:
         # TODO:
         #   - Figure out why `Results.init_content` is a `pd.Series`.
         #   - Support `Var`s as arguments?
@@ -117,7 +118,7 @@ class Results:
         ----------
         key : string
             name of a result (e.g. pyomo variable or derived quantity)
-        default : any
+        default : Any
             value to return if key is not found
 
         Returns
@@ -126,9 +127,9 @@ class Results:
         """
 
         if key == "variable_costs":
-            rv = self._calc_variable_costs()
+            return self._calc_variable_costs()
         elif key == "investment_costs":
-            rv = self._calc_capex()
+            return self._calc_capex()
         elif key in self._variables:
             rv = []
             for occurence in self._variables[key]:
@@ -148,9 +149,7 @@ class Results:
             # if third-party code introduces a variable name collision.
             rv = pd.concat(rv, axis=1)
 
-            if rv.empty is True:
-                rv = default
-            else:
+            if not rv.empty:
                 # overwrite known indexes
                 index_type = tuple(dataset.index_set().subsets())[-1].name
                 match index_type:
@@ -160,9 +159,9 @@ class Results:
                         rv.index = self._model.es.timeindex[:-1]
                     case _:
                         rv.index = rv.index.get_level_values(-1)
-        else:
-            rv = default
-        return rv
+                return rv
+
+        return default
 
     # --- BEGIN: The following code can be removed for versions >= v0.7 ---
     def to_df(self, variable: str) -> pd.DataFrame | pd.Series:
