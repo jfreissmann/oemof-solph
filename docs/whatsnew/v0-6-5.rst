@@ -35,7 +35,7 @@ Other changes
   is used instead. We expect no effect for end users.
 * _FakeSequences can no longer have a defined length. It has "every length"
   by convention. Thus, it can now be reliably cast; not to an array but to
-  a scalar float.
+  a scalar float. We expect no effect for end users.
 * Updated respective examples and tutorials to use current TSAM API (v3).
 
 Contributors
