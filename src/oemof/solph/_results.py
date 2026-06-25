@@ -76,7 +76,7 @@ class Results:
                 # We should avoid useless iterations.
                 pass
 
-        # adss additional keys for the calculation of opex and capex
+        # adds additional keys for the calculation of opex and capex
         # if the keyword eval_economy is True
         # checks if investment optimization is happing to add capex as key
         # TODO: add keyword for multiperiod
