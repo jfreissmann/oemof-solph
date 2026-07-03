@@ -193,7 +193,7 @@ def test_fake_sequence_logic_operators():
     assert not (False & _FakeSequence(True))
     assert not (False & _FakeSequence(False))
 
-    # _FakeSequence and _FakeSequence
+    # _FakeSequence & _FakeSequence
     assert _FakeSequence(True) & _FakeSequence(True)
     assert not (_FakeSequence(True) & _FakeSequence(False))
     assert not (_FakeSequence(False) & _FakeSequence(True))
