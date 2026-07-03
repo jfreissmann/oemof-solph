@@ -181,29 +181,41 @@ def test_fake_sequence_logic_operators():
     assert _FakeSequence(True)
     assert not _FakeSequence(False)
 
-    # _FakeSequence and bool
-    assert _FakeSequence(True) and True
-    assert not (_FakeSequence(True) and False)
-    assert not (_FakeSequence(False) and True)
-    assert not (_FakeSequence(False) and False)
+    # _FakeSequence & bool
+    assert _FakeSequence(True) & True
+    assert not (_FakeSequence(True) & False)
+    assert not (_FakeSequence(False) & True)
+    assert not (_FakeSequence(False) & False)
 
-    # bool and _FakeSequence
-    assert True and _FakeSequence(True)
-    assert not (True and _FakeSequence(False))
-    assert not (False and _FakeSequence(True))
-    assert not (False and _FakeSequence(False))
+    # bool & _FakeSequence
+    assert True & _FakeSequence(True)
+    assert not (True & _FakeSequence(False))
+    assert not (False & _FakeSequence(True))
+    assert not (False & _FakeSequence(False))
 
-    # _FakeSequence or bool
-    assert _FakeSequence(True) or True
-    assert (_FakeSequence(True) or False)
-    assert (_FakeSequence(False) or True)
-    assert not (_FakeSequence(False) or False)
+    # _FakeSequence and _FakeSequence
+    assert _FakeSequence(True) & _FakeSequence(True)
+    assert not (_FakeSequence(True) & _FakeSequence(False))
+    assert not (_FakeSequence(False) & _FakeSequence(True))
+    assert not (_FakeSequence(False) & _FakeSequence(False))
 
-    # bool or _FakeSequence
-    assert True or _FakeSequence(True)
-    assert (True or _FakeSequence(False))
-    assert (False or _FakeSequence(True))
-    assert not (False or _FakeSequence(False))
+    # _FakeSequence | bool
+    assert _FakeSequence(True) | True
+    assert _FakeSequence(True) | False
+    assert _FakeSequence(False) | True
+    assert not (_FakeSequence(False) | False)
+
+    # bool | _FakeSequence
+    assert True | _FakeSequence(True)
+    assert True | _FakeSequence(False)
+    assert False | _FakeSequence(True)
+    assert not (False | _FakeSequence(False))
+
+    # _FakeSequence | _FakeSequence
+    assert _FakeSequence(True) | _FakeSequence(True)
+    assert _FakeSequence(True) | _FakeSequence(False)
+    assert _FakeSequence(False) or _FakeSequence(True)
+    assert not (_FakeSequence(False) | _FakeSequence(False))
 
 
 def test_fake_sequence_addition():
