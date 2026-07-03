@@ -223,6 +223,16 @@ class _FakeSequence:
     def __abs__(self):
         return _FakeSequence(abs(self.value))
 
+    def __and__(self, other):
+        return sequence(self.value & other)
+
+    __rand__ = __and__
+
+    def __or__(self, other):
+        return sequence(self.value | other)
+
+    __ror__ = __or__
+
     def __eq__(self, other):
         return sequence(self.value == other)
 
