@@ -99,7 +99,7 @@ def valid_sequence(sequence, length: int) -> bool:
             warnings.warn(
                 "Sequence longer than needed"
                 f" ({sequence.size} items instead of {length})."
-                " This will be trated as an error in the future.",
+                " This will be treated as an error in the future.",
                 FutureWarning,
             )
             return True
