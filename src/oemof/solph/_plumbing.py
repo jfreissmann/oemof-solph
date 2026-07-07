@@ -203,7 +203,10 @@ class _FakeSequence:
         return f"[{self._value}, {self._value}, ..., {self._value}]"
 
     def __float__(self):
-        return self._value
+        return float(self._value)
+
+    def __int__(self):
+        return int(self._value)
 
     def max(self):
         return self._value
