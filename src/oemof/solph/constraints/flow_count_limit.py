@@ -32,7 +32,8 @@ def limit_active_flow_count(
     constraint_name: string
         name for the constraint
     flows: list of flows
-        flows (have to be NonConvex) in the format [(in, out)]
+        flows (have to be NonConvex, with or without investment) in the
+        format [(in, out)]
     lower_limit: integer
         minimum number of active flows in the list
     upper_limit: integer
@@ -44,7 +45,8 @@ def limit_active_flow_count(
 
     Note
     ----
-    SimpleFlowBlock objects required to be NonConvex
+    Flow objects are required to be NonConvex. They may additionally be
+    investment optimized (InvestNonConvexFlow).
 
 
     **Constraint:**
@@ -122,7 +124,8 @@ def limit_active_flow_count_by_keyword(
     model: oemof.solph.Model
         Model to which constraints are added
     keyword: string
-        keyword to consider (searches all NonConvexFlows)
+        keyword to consider (searches all NonConvexFlows and
+        InvestNonConvexFlows)
     lower_limit: integer
         minimum number of active flows having the keyword
     upper_limit: integer
