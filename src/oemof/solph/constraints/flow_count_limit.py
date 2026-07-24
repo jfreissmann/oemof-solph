@@ -79,10 +79,17 @@ def limit_active_flow_count(
     attrname_constraint = constraint_name + "_constraint"
 
     def _flow_count_rule(m):
+        if hasattr(m.InvestNonConvexFlowBlock, "INVEST_NON_CONVEX_FLOWS"):
+            invest_flows = m.InvestNonConvexFlowBlock.INVEST_NON_CONVEX_FLOWS
+        else:
+            invest_flows = []
         for ts in m.TIMESTEPS:
-            lhs = sum(
-                m.NonConvexFlowBlock.status[fi, fo, ts] for fi, fo in flows
-            )
+            lhs = 0
+            for fi, fo in flows:
+                if (fi, fo) in invest_flows:
+                    lhs += m.InvestNonConvexFlowBlock.status[fi, fo, ts]
+                else:
+                    lhs += m.NonConvexFlowBlock.status[fi, fo, ts]
             rhs = getattr(model, constraint_name)[ts]
             expr = lhs == rhs
             if expr is not True:
