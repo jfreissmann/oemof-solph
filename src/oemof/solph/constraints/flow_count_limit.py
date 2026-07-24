@@ -136,8 +136,20 @@ def limit_active_flow_count_by_keyword(
     --------
     limit_active_flow_count
     """
+    nonconvex_flows = []
+    if hasattr(
+        model.NonConvexFlowBlock, "FIXED_CAPACITY_NONCONVEX_FLOWS"
+    ):
+        nonconvex_flows += list(
+            model.NonConvexFlowBlock.FIXED_CAPACITY_NONCONVEX_FLOWS
+        )
+    if hasattr(model.InvestNonConvexFlowBlock, "INVEST_NON_CONVEX_FLOWS"):
+        nonconvex_flows += list(
+            model.InvestNonConvexFlowBlock.INVEST_NON_CONVEX_FLOWS
+        )
+
     flows = []
-    for i, o in model.NonConvexFlowBlock.FIXED_CAPACITY_NONCONVEX_FLOWS:
+    for i, o in nonconvex_flows:
         if keyword in model.flows[i, o].custom_properties:
             flows.append((i, o))
 
