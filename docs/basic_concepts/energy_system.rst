@@ -68,7 +68,7 @@ Buses
 
 Buses represent commodities such as electricity, heat or natural gas.
 The main purpose of a Bus is the balancing of its inflows and its outflows at
-all points in time, meaning, that the sum of all incoming flows and all
+every single point in time, meaning, that the sum of all incoming flows and all
 outgoing flows must be equal to zero.
 
 To define an instance of a Bus, only a unique label is necessary. If you do not
