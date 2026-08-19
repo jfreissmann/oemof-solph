@@ -88,10 +88,10 @@ def limit_active_flow_count(
         for ts in m.TIMESTEPS:
             lhs = 0
             for fi, fo in flows:
-                if (fi, fo) in invest_flows:
-                    lhs += m.InvestNonConvexFlowBlock.status[fi, fo, ts]
-                else:
+                if (fi, fo) not in invest_flows:
                     lhs += m.NonConvexFlowBlock.status[fi, fo, ts]
+                else:
+                    lhs += m.InvestNonConvexFlowBlock.status[fi, fo, ts]
             rhs = getattr(model, constraint_name)[ts]
             expr = lhs == rhs
             if expr is not True:
