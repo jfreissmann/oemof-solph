@@ -146,10 +146,7 @@ def main(optimize=True, solver="cbc"):
 
     c_total = c_invest + c_source_0 + c_source_1
 
-    es.results["meta"] = solph.processing.meta_results(om)
-    objective = pd.DataFrame.from_dict(es.results["meta"]).at[
-        "Lower bound", "objective"
-    ]
+    objective = results["objective"]
 
     print("  objective:", objective)
     print("  berechnet:", c_total)
@@ -171,4 +168,4 @@ def main(optimize=True, solver="cbc"):
 
 
 if __name__ == "__main__":
-    main()
+    main(solver="highs")

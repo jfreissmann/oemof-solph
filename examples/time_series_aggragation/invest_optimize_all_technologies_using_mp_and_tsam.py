@@ -344,9 +344,6 @@ def main(optimize=True, solver="cbc"):
 
     electricity_bus = solph.views.node(results, "electricity")
 
-    meta_results = solph.processing.meta_results(om)
-    pp.pprint(meta_results)
-
     my_results = electricity_bus["period_scalars"]
 
     # installed capacity of storage in GWh

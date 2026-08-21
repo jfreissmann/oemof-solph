@@ -232,9 +232,6 @@ def main(optimize=True, solver="cbc"):
 
     electricity_bus = solph.views.node(results, "electricity")
 
-    meta_results = solph.processing.meta_results(om)
-    pp.pprint(meta_results)
-
     # returns a pandas Series with all scalar values (investment, total) of
     # components connected to the electricity bus
     my_results = electricity_bus["scalars"]
