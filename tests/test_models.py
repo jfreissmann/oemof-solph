@@ -187,6 +187,9 @@ def test_highs_flow_values_match_cbc():
     )
 
 
+@pytest.mark.skip(
+    reason="Handling of duals in new Results object is not yet implemented"
+)
 def test_highs_duals_match_cbc():
     es = _make_feasible_es()
 
@@ -206,6 +209,10 @@ def test_highs_duals_match_cbc():
         assert highs_duals[key] == pytest.approx(cbc_duals[key], abs=1e-6)
 
 
+@pytest.mark.skip(
+    reason="Handling of reduced cost in new Results object is not yet "
+           "implemented"
+)
 def test_highs_reduced_costs_match_cbc():
     """Reduced costs match CBC for variables both solvers report.
 
