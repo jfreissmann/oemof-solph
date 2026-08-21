@@ -67,10 +67,10 @@ def check_single_example(file, solver, doc_path, test_optimize, stop_at_error):
             f"{file.parent.name}.{module_name}"
         )
         main = file_module.main
-        has_main_function = True
     except AttributeError:
         print(f"{file.name}.{examplename} does not have main() function")
-        has_main_function = False
+        check = "failed because no main() function"
+        return check
 
     if stop_at_error:
         es = main(optimize=test_optimize, solver=solver)
@@ -81,10 +81,7 @@ def check_single_example(file, solver, doc_path, test_optimize, stop_at_error):
             check = "okay"
         except Exception as e:
             print(e)
-            if not has_main_function:
-                check = "failed because no main() function"
-            else:
-                check = "failed"
+            check = "failed"
             es = None
 
     if es is not None and oemof_visio is True:
@@ -168,10 +165,3 @@ if __name__ == "__main__":
     set_test_optimize = True
     set_solvers = ["cbc", "highs"]
     check_all_examples(set_solvers, set_test_optimize, set_stop_at_error)
-    # set_name = "v2_invest_optimize_only_gas_and_storage.py"
-    # set_dir = "storage_investment"
-    # set_solver = "cbc"
-    # check_result = check_file(
-    #     set_dir, set_name, set_solver, set_test_optimize, set_stop_at_error
-    # )
-    # print(f"{set_dir}.{set_name}: {check_result}")
