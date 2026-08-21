@@ -10,7 +10,7 @@ result = subprocess.run(
 
 # Create an output if process failed
 if result.returncode != 0:
-    print("Build fehlgeschlagen, starte mit Details:")
+    print("Build failed. Starting over with active output:")
     subprocess.run([sys.executable, "-m", "build", "."])
 
 sys.exit(result.returncode)
