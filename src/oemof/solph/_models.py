@@ -460,15 +460,14 @@ class Model(po.ConcreteModel):
         }
 
         optimal = tc == appsi.base.TerminationCondition.optimal
-        condition = tc.name
-        status = tc.value
 
-        appsi_results.solution_loader.load_vars()
+        if optimal or appsi_results.best_feasible_objective is not None:
+            appsi_results.solution_loader.load_vars()
 
         return solver_info(
             optimal=optimal,
-            termination_condition=condition,
-            status=status,
+            termination_condition=tc,
+            status=tc.value,
             solver_results=solver_results,
         )
 
@@ -552,7 +551,7 @@ class Model(po.ConcreteModel):
         self.solver_results = solver_return.solver_results
 
         if solver_return.optimal:
-            msg = "Optimization successful..."
+            msg = "Optimization successful."
             logging.info(msg)
         else:
             msg = (
@@ -560,14 +559,11 @@ class Model(po.ConcreteModel):
                 f"Instead the optimization ended with\n"
                 f"       - status: {solver_return.status}\n"
                 f"       - termination condition: "
-                f"{solver_return.termination_condition}"
+                f"{solver_return.termination_condition.name}"
             )
 
             if allow_nonoptimal:
-                warnings.warn(
-                    msg.format(solver_return.status, solver_return.message),
-                    UserWarning,
-                )
+                warnings.warn(msg, UserWarning)
                 return solver_return.solver_results
             else:
                 raise RuntimeError(msg)
