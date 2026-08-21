@@ -64,8 +64,6 @@ def main(optimize=True, solver="cbc"):
     )
     data = pd.read_csv(filename)
 
-    solver = "cbc"
-
     # Create an energy system and optimize the dispatch at least costs.
     # ####################### initialize and provide data #####################
     datetimeindex = create_time_index(2016, number=len(data))
