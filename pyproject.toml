@@ -5,7 +5,7 @@ src = ["src", "tests"]
 target-version = "py313"
 
 [build-system]
-requires = ["flit_core >=3.2,<4"]
+requires = ["flit_core >=3.2,<5"]
 build-backend = "flit_core.buildapi"
 
 [tool.flit.sdist]
@@ -83,11 +83,13 @@ Changelog = "https://oemof-solph.readthedocs.io/en/latest/changelog.html"
 
 [project.optional-dependencies]
 dev = [
+    "cffconvert",
     "flit",
     "furo",
     "highspy",
     "matplotlib",
     "nbformat",
+    "oemof.demand",
     "openpyxl",
     "pytest",
     "sphinx",
@@ -95,7 +97,9 @@ dev = [
     "sphinx-design",
     "termcolor",
     "tox",
-    "tsam",
+    "tsam>=3.0",
+    "workalendar",
+    "pyyaml",
 ]
 
 [project.scripts]
