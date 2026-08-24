@@ -11,6 +11,8 @@ API changes
 New features
 ############
 
+* Added support for the solver HiGHS. If installed, you can use it by calling
+  `Model.solve(solver="highs")`.
 
 Documentation
 #############
@@ -50,6 +52,8 @@ Contributors
 * Stephan Günther
 * Diana Maldonado Castro
 * Jonas Freißmann
+* Uwe Krien
+* Francesco Witte
 
 Acknowledgements
 ################
